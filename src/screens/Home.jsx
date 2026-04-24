@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import CalendarOverlay from '../components/CalendarOverlay'
-import { BLOCKS, completionOf, fmtKey } from '../lib/utils'
+import { BLOCKS, completionOf, fmtKey, ordinalDate } from '../lib/utils'
 import { useT } from '../contexts/LanguageContext'
 
 const BLOCK_COLOR = {
@@ -23,15 +23,13 @@ export default function Home({ selectedDate, onSelectDate, dayData, loggedDates,
   const today = new Date()
   const isToday = fmtKey(selectedDate) === fmtKey(today)
 
-  const dateLabel = selectedDate.toLocaleDateString('en-GB', {
-    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
-  })
+  const dateLabel = ordinalDate(selectedDate)
 
   return (
     <div className="screen">
       <div style={styles.topBar}>
         <p style={styles.dateText}>
-          {isToday ? today.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }) : dateLabel}
+          {isToday ? ordinalDate(today) : dateLabel}
         </p>
         <button style={styles.calBtn} onClick={() => setShowCalendar(true)} aria-label="Open calendar">
           📅

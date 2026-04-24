@@ -82,3 +82,13 @@ export const BLOCKS = [
 
 export const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December']
 export const DAY_NAMES_SHORT = ['Su','Mo','Tu','We','Th','Fr','Sa']
+
+export function ordinalDate(date) {
+  const n = date.getDate()
+  const suffix = ['th','st','nd','rd']
+  const v = n % 100
+  const s = suffix[(v - 20) % 10] || suffix[v] || suffix[0]
+  const weekday = date.toLocaleDateString('en-US', { weekday: 'long' })
+  const month   = date.toLocaleDateString('en-US', { month: 'long' })
+  return `${weekday}, ${month} ${n}${s}`
+}

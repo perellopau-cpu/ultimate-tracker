@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { supabase } from './lib/supabase'
 import { useTheme } from './hooks/useTheme'
-import { fmtKey, todayKey, emptyDay, BLOCKS } from './lib/utils'
+import { fmtKey, todayKey, emptyDay, BLOCKS, ordinalDate } from './lib/utils'
 import { useT } from './contexts/LanguageContext'
 import Login from './screens/Login'
 import Home from './screens/Home'
@@ -25,17 +25,6 @@ function SaveIndicator({ status }) {
       {status === 'error'  && t('save.error')}
     </div>
   )
-}
-
-// ── Ordinal date helper ───────────────────────────────────────────────
-function ordinalDate(date) {
-  const n = date.getDate()
-  const suffix = ['th','st','nd','rd']
-  const v = n % 100
-  const s = suffix[(v - 20) % 10] || suffix[v] || suffix[0]
-  const weekday = date.toLocaleDateString('en-US', { weekday: 'long' })
-  const month   = date.toLocaleDateString('en-US', { month: 'long' })
-  return `${weekday}, ${month} ${n}${s}`
 }
 
 // ── Log screen wrapper ────────────────────────────────────────────────
