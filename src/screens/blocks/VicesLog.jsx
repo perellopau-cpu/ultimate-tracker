@@ -36,24 +36,24 @@ function DrinkPicker({ value, onChange }) {
       background: 'var(--surface2)', borderRadius: 10,
       border: '1px solid var(--border)', overflow: 'hidden',
     }}>
-      {/* Centre highlight band */}
+      {/* Centre highlight band — behind the text (zIndex 0) */}
       <div style={{
         position: 'absolute', top: ITEM_H, left: 0, right: 0, height: ITEM_H,
         background: 'var(--accent-bg)',
         borderTop: '1px solid var(--accent)', borderBottom: '1px solid var(--accent)',
-        pointerEvents: 'none', zIndex: 1,
+        pointerEvents: 'none', zIndex: 0,
       }} />
       {/* Fade top */}
       <div style={{
         position: 'absolute', top: 0, left: 0, right: 0, height: ITEM_H,
         background: 'linear-gradient(to bottom, var(--surface2), transparent)',
-        pointerEvents: 'none', zIndex: 2,
+        pointerEvents: 'none', zIndex: 3,
       }} />
       {/* Fade bottom */}
       <div style={{
         position: 'absolute', bottom: 0, left: 0, right: 0, height: ITEM_H,
         background: 'linear-gradient(to top, var(--surface2), transparent)',
-        pointerEvents: 'none', zIndex: 2,
+        pointerEvents: 'none', zIndex: 3,
       }} />
 
       <div
@@ -63,6 +63,7 @@ function DrinkPicker({ value, onChange }) {
           height: '100%', overflowY: 'scroll',
           scrollSnapType: 'y mandatory',
           scrollbarWidth: 'none', msOverflowStyle: 'none',
+          position: 'relative', zIndex: 2,
         }}
       >
         <div style={{ height: ITEM_H }} />
