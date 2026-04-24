@@ -27,6 +27,17 @@ function SaveIndicator({ status }) {
   )
 }
 
+// ── Ordinal date helper ───────────────────────────────────────────────
+function ordinalDate(date) {
+  const n = date.getDate()
+  const suffix = ['th','st','nd','rd']
+  const v = n % 100
+  const s = suffix[(v - 20) % 10] || suffix[v] || suffix[0]
+  const weekday = date.toLocaleDateString('en-US', { weekday: 'long' })
+  const month   = date.toLocaleDateString('en-US', { month: 'long' })
+  return `${weekday}, ${month} ${n}${s}`
+}
+
 // ── Log screen wrapper ────────────────────────────────────────────────
 const BLOCK_LABEL_KEY = {
   sleep: 'block.sleep', nutrition: 'block.nutrition',
@@ -50,9 +61,7 @@ function LogScreen({ block, dayData, date, isToday, userId, onBack, onSave, last
       <SaveIndicator status={onSave.status} />
 
       <div className={`date-badge ${isToday ? 'today' : ''}`}>
-        {isToday
-          ? '● Today'
-          : `● ${date.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' })}`}
+        {isToday ? '● Today' : `● ${ordinalDate(date)}`}
       </div>
 
       {block === 'sleep'     && <SleepLog     val={val} onChange={v => onSave.update(block, v)} />}
