@@ -39,22 +39,22 @@ function DrinkPicker({ value, onChange }) {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginTop: 10 }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 10 }}>
 
-      {/* ▲ button */}
+      {/* ‹ button */}
       <button
-        onClick={() => step(1)}
+        onClick={() => step(-1)}
         style={{
-          width: '100%', height: 32, borderRadius: 8,
+          width: 36, height: 36, borderRadius: 8, flexShrink: 0,
           background: 'var(--surface2)', border: '1px solid var(--border)',
-          color: 'var(--text)', fontSize: 16, cursor: 'pointer',
+          color: 'var(--text)', fontSize: 18, cursor: 'pointer',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}
-      >▲</button>
+      >‹</button>
 
       {/* Drum roll */}
       <div style={{
-        position: 'relative', height: ITEM_H * 3,
+        flex: 1, position: 'relative', height: ITEM_H * 3,
         background: 'var(--surface2)', borderRadius: 10,
         border: '1px solid var(--border)', overflow: 'hidden',
       }}>
@@ -110,16 +110,16 @@ function DrinkPicker({ value, onChange }) {
         </div>
       </div>
 
-      {/* ▼ button */}
+      {/* › button */}
       <button
-        onClick={() => step(-1)}
+        onClick={() => step(1)}
         style={{
-          width: '100%', height: 32, borderRadius: 8,
+          width: 36, height: 36, borderRadius: 8, flexShrink: 0,
           background: 'var(--surface2)', border: '1px solid var(--border)',
-          color: 'var(--text)', fontSize: 16, cursor: 'pointer',
+          color: 'var(--text)', fontSize: 18, cursor: 'pointer',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}
-      >▼</button>
+      >›</button>
     </div>
   )
 }
