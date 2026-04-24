@@ -17,19 +17,19 @@ const BLOCK_LABEL_KEY = {
 }
 
 export default function Home({ selectedDate, onSelectDate, dayData, loggedDates, onOpenBlock }) {
-  const { t } = useT()
+  const { t, lang } = useT()
   const [showCalendar, setShowCalendar] = useState(false)
 
   const today = new Date()
   const isToday = fmtKey(selectedDate) === fmtKey(today)
 
-  const dateLabel = ordinalDate(selectedDate)
+  const dateLabel = ordinalDate(selectedDate, lang)
 
   return (
     <div className="screen">
       <div style={styles.topBar}>
         <p style={styles.dateText}>
-          {isToday ? ordinalDate(today) : dateLabel}
+          {isToday ? ordinalDate(today, lang) : dateLabel}
         </p>
         <button style={styles.calBtn} onClick={() => setShowCalendar(true)} aria-label="Open calendar">
           📅

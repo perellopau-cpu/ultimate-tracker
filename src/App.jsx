@@ -34,7 +34,7 @@ const BLOCK_LABEL_KEY = {
 }
 
 function LogScreen({ block, dayData, date, isToday, userId, onBack, onSave, lastWeight, lastKcal }) {
-  const { t } = useT()
+  const { t, lang } = useT()
   const b = BLOCKS.find(b => b.id === block)
   const val = dayData[block]
 
@@ -50,7 +50,7 @@ function LogScreen({ block, dayData, date, isToday, userId, onBack, onSave, last
       <SaveIndicator status={onSave.status} />
 
       <div className={`date-badge ${isToday ? 'today' : ''}`}>
-        {isToday ? '● Today' : `● ${ordinalDate(date)}`}
+        {isToday ? '● Today' : `● ${ordinalDate(date, lang)}`}
       </div>
 
       {block === 'sleep'     && <SleepLog     val={val} onChange={v => onSave.update(block, v)} />}
