@@ -8,38 +8,17 @@ const MAX_DRINKS = 20
 function DrinkPicker({ value, onChange }) {
   const ref      = useRef(null)
   const settling = useRef(false)
-  const valueRef = useRef(value)   // always up-to-date value for the wheel handler
   const items    = Array.from({ length: MAX_DRINKS }, (_, i) => i + 1)
+  const current  = Math.max(1, Math.min(parseInt(value) || 1, MAX_DRINKS))
 
-  // Keep valueRef in sync
-  useEffect(() => { valueRef.current = value }, [value])
-
-  // Scroll to value when it changes from outside
+  // Scroll to value whenever it changes
   useEffect(() => {
     const el = ref.current
     if (!el || settling.current) return
-    el.scrollTo({ top: (parseInt(value) - 1) * ITEM_H, behavior: 'smooth' })
-  }, [value])
+    el.scrollTo({ top: (current - 1) * ITEM_H, behavior: 'smooth' })
+  }, [current])
 
-  // Non-passive wheel listener for mouse scroll support
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const handler = (e) => {
-      e.preventDefault()
-      const current = parseInt(valueRef.current) || 1
-      const next = e.deltaY > 0
-        ? Math.min(current + 1, MAX_DRINKS)
-        : Math.max(current - 1, 1)
-      settling.current = true
-      el.scrollTo({ top: (next - 1) * ITEM_H, behavior: 'smooth' })
-      onChange(String(next))
-      setTimeout(() => { settling.current = false }, 300)
-    }
-    el.addEventListener('wheel', handler, { passive: false })
-    return () => el.removeEventListener('wheel', handler)
-  }, [onChange])
-
+  // Snap on touch scroll
   const onScroll = useCallback(() => {
     const el = ref.current
     if (!el || settling.current) return
@@ -54,62 +33,93 @@ function DrinkPicker({ value, onChange }) {
     }, 120)
   }, [items, onChange])
 
-  return (
-    <div style={{
-      position: 'relative', height: ITEM_H * 3, marginTop: 10,
-      background: 'var(--surface2)', borderRadius: 10,
-      border: '1px solid var(--border)', overflow: 'hidden',
-    }}>
-      {/* Centre highlight band — behind the text (zIndex 0) */}
-      <div style={{
-        position: 'absolute', top: ITEM_H, left: 0, right: 0, height: ITEM_H,
-        background: 'var(--accent-bg)',
-        borderTop: '1px solid var(--accent)', borderBottom: '1px solid var(--accent)',
-        pointerEvents: 'none', zIndex: 0,
-      }} />
-      {/* Fade top */}
-      <div style={{
-        position: 'absolute', top: 0, left: 0, right: 0, height: ITEM_H,
-        background: 'linear-gradient(to bottom, var(--surface2), transparent)',
-        pointerEvents: 'none', zIndex: 3,
-      }} />
-      {/* Fade bottom */}
-      <div style={{
-        position: 'absolute', bottom: 0, left: 0, right: 0, height: ITEM_H,
-        background: 'linear-gradient(to top, var(--surface2), transparent)',
-        pointerEvents: 'none', zIndex: 3,
-      }} />
+  const step = (dir) => {
+    const next = Math.max(1, Math.min(current + dir, MAX_DRINKS))
+    onChange(String(next))
+  }
 
-      <div
-        ref={ref}
-        onScroll={onScroll}
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 10 }}>
+
+      {/* ▼ button */}
+      <button
+        onClick={() => step(-1)}
         style={{
-          height: '100%', overflowY: 'scroll',
-          scrollSnapType: 'y mandatory',
-          scrollbarWidth: 'none', msOverflowStyle: 'none',
-          position: 'relative', zIndex: 2,
+          width: 36, height: 36, borderRadius: 8, flexShrink: 0,
+          background: 'var(--surface2)', border: '1px solid var(--border)',
+          color: 'var(--text)', fontSize: 18, cursor: 'pointer',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}
-      >
-        <div style={{ height: ITEM_H }} />
-        {items.map(n => {
-          const active = String(n) === String(value)
-          return (
-            <div key={n} style={{
-              height: ITEM_H, scrollSnapAlign: 'center',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontFamily: "'DM Mono', monospace",
-              fontSize: active ? 18 : 13,
-              fontWeight: active ? 700 : 400,
-              color: active ? 'var(--accent)' : 'var(--muted)',
-              transition: 'font-size .1s, color .1s',
-              userSelect: 'none',
-            }}>
-              {n}
-            </div>
-          )
-        })}
-        <div style={{ height: ITEM_H }} />
+      >‹</button>
+
+      {/* Drum roll */}
+      <div style={{
+        flex: 1, position: 'relative', height: ITEM_H * 3,
+        background: 'var(--surface2)', borderRadius: 10,
+        border: '1px solid var(--border)', overflow: 'hidden',
+      }}>
+        {/* Centre highlight */}
+        <div style={{
+          position: 'absolute', top: ITEM_H, left: 0, right: 0, height: ITEM_H,
+          background: 'var(--accent-bg)',
+          borderTop: '1px solid var(--accent)', borderBottom: '1px solid var(--accent)',
+          pointerEvents: 'none', zIndex: 0,
+        }} />
+        {/* Fade top */}
+        <div style={{
+          position: 'absolute', top: 0, left: 0, right: 0, height: ITEM_H,
+          background: 'linear-gradient(to bottom, var(--surface2), transparent)',
+          pointerEvents: 'none', zIndex: 3,
+        }} />
+        {/* Fade bottom */}
+        <div style={{
+          position: 'absolute', bottom: 0, left: 0, right: 0, height: ITEM_H,
+          background: 'linear-gradient(to top, var(--surface2), transparent)',
+          pointerEvents: 'none', zIndex: 3,
+        }} />
+
+        <div
+          ref={ref}
+          onScroll={onScroll}
+          style={{
+            height: '100%', overflowY: 'scroll',
+            scrollSnapType: 'y mandatory',
+            scrollbarWidth: 'none', msOverflowStyle: 'none',
+            position: 'relative', zIndex: 2,
+          }}
+        >
+          <div style={{ height: ITEM_H }} />
+          {items.map(n => {
+            const active = n === current
+            return (
+              <div key={n} style={{
+                height: ITEM_H, scrollSnapAlign: 'center',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontFamily: "'DM Mono', monospace",
+                fontSize: active ? 18 : 13,
+                fontWeight: active ? 700 : 400,
+                color: active ? 'var(--accent)' : 'var(--muted)',
+                transition: 'font-size .1s, color .1s',
+                userSelect: 'none',
+              }}>
+                {n}
+              </div>
+            )
+          })}
+          <div style={{ height: ITEM_H }} />
+        </div>
       </div>
+
+      {/* ▲ button */}
+      <button
+        onClick={() => step(1)}
+        style={{
+          width: 36, height: 36, borderRadius: 8, flexShrink: 0,
+          background: 'var(--surface2)', border: '1px solid var(--border)',
+          color: 'var(--text)', fontSize: 18, cursor: 'pointer',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}
+      >›</button>
     </div>
   )
 }
@@ -124,7 +134,6 @@ export default function VicesLog({ val, onChange }) {
 
   const handleNone = () => onChange({ ...val, alcoholCount: '0' })
   const handleSome = () => {
-    // default to 1 if no previous value
     const prev = parseInt(val.alcoholCount)
     onChange({ ...val, alcoholCount: String(prev > 0 ? prev : 1) })
   }
