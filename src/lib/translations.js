@@ -32,7 +32,7 @@ const t = {
     // Calendar
     'cal.close': 'Close',
     'cal.months': ['January','February','March','April','May','June','July','August','September','October','November','December'],
-    'cal.days': ['Su','Mo','Tu','We','Th','Fr','Sa'],
+    'cal.days': ['Mo','Tu','We','Th','Fr','Sa','Su'],
 
     // Blocks
     'block.sleep': 'Sleep',
@@ -55,6 +55,9 @@ const t = {
     'sleep.waketime': 'Wake time',
     'sleep.hoursSlept': 'Hours slept',
     'sleep.phone30': 'Phone in first 30 min after waking?',
+    'sleep.wakeSpeed': 'Woke up...',
+    'sleep.fast': 'Fast',
+    'sleep.slow': 'Slow',
     'sleep.yes': 'Yes',
     'sleep.no': 'No',
 
@@ -91,7 +94,12 @@ const t = {
     'formation.reading': 'Reading (min)',
 
     // Vices
-    'vices.cigarettes': 'Cigarettes',
+    'vices.cigarettes': 'Smoking',
+    'vices.vape': 'Vape',
+    'vices.cigar': 'Cigar',
+    'vices.cigarettesOpt': 'Cigarettes',
+    'vices.notSmoked': 'Not smoked',
+    'vices.howMany': 'How many?',
     'vices.alcohol': 'Alcohol',
     'vices.drinks': 'Drinks',
     'vices.type': 'Type',
@@ -156,7 +164,7 @@ const t = {
     // Calendar
     'cal.close': 'Cerrar',
     'cal.months': ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
-    'cal.days': ['Do','Lu','Ma','Mi','Ju','Vi','Sá'],
+    'cal.days': ['Lu','Ma','Mi','Ju','Vi','Sá','Do'],
 
     // Blocks
     'block.sleep': 'Sueño',
@@ -179,6 +187,9 @@ const t = {
     'sleep.waketime': 'Hora de despertar',
     'sleep.hoursSlept': 'Horas dormidas',
     'sleep.phone30': '¿Móvil en los primeros 30 min?',
+    'sleep.wakeSpeed': 'Me desperté...',
+    'sleep.fast': 'Rápido',
+    'sleep.slow': 'Lento',
     'sleep.yes': 'Sí',
     'sleep.no': 'No',
 
@@ -215,7 +226,12 @@ const t = {
     'formation.reading': 'Lectura (min)',
 
     // Vices
-    'vices.cigarettes': 'Cigarrillos',
+    'vices.cigarettes': 'Fumado',
+    'vices.vape': 'Vape',
+    'vices.cigar': 'Puro',
+    'vices.cigarettesOpt': 'Cigarrillos',
+    'vices.notSmoked': 'No he fumado',
+    'vices.howMany': '¿Cuántos?',
     'vices.alcohol': 'Alcohol',
     'vices.drinks': 'Bebidas',
     'vices.type': 'Tipo',

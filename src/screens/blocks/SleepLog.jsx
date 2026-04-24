@@ -36,6 +36,23 @@ export default function SleepLog({ val, onChange }) {
         </div>
       )}
 
+      <div className="section-label">{t('sleep.wakeSpeed')}</div>
+      <div className="toggle-group">
+        <button
+          className={`toggle-btn ${val.wakeUpSpeed === 'fast' ? 'active' : ''}`}
+          style={val.wakeUpSpeed === 'fast' ? { background: 'var(--accent)', color: 'var(--accent-text)' } : {}}
+          onClick={() => onChange({ ...val, wakeUpSpeed: val.wakeUpSpeed === 'fast' ? null : 'fast' })}
+        >
+          {t('sleep.fast')} ⚡
+        </button>
+        <button
+          className={`toggle-btn danger ${val.wakeUpSpeed === 'slow' ? 'active' : ''}`}
+          onClick={() => onChange({ ...val, wakeUpSpeed: val.wakeUpSpeed === 'slow' ? null : 'slow' })}
+        >
+          {t('sleep.slow')} 🐢
+        </button>
+      </div>
+
       <div className="section-label">{t('sleep.phone30')}</div>
       <div className="toggle-group">
         <button

@@ -6,14 +6,34 @@ export default function VicesLog({ val, onChange }) {
   return (
     <div>
       <div className="section-label">{t('vices.cigarettes')}</div>
-      <div className="field">
-        <input
-          type="number"
-          placeholder="0"
-          value={val.cigarettes}
-          onChange={e => onChange({ ...val, cigarettes: e.target.value })}
-        />
+      <div className="toggle-group" style={{ flexWrap: 'wrap' }}>
+        {[
+          { id: 'vape',        labelKey: 'vices.vape',          danger: true  },
+          { id: 'cigar',       labelKey: 'vices.cigar',         danger: true  },
+          { id: 'cigarettes',  labelKey: 'vices.cigarettesOpt', danger: true  },
+          { id: 'not_smoked',  labelKey: 'vices.notSmoked',     danger: false },
+        ].map(({ id, labelKey, danger }) => (
+          <button
+            key={id}
+            className={`toggle-btn ${danger ? 'danger' : ''} ${val.smokeType === id ? 'active' : ''}`}
+            onClick={() => onChange({ ...val, smokeType: val.smokeType === id ? null : id, cigaretteCount: '' })}
+          >
+            {t(labelKey)}
+          </button>
+        ))}
       </div>
+
+      {val.smokeType === 'cigarettes' && (
+        <div className="field" style={{ marginTop: 12 }}>
+          <label>{t('vices.howMany')}</label>
+          <input
+            type="number"
+            placeholder="0"
+            value={val.cigaretteCount}
+            onChange={e => onChange({ ...val, cigaretteCount: e.target.value })}
+          />
+        </div>
+      )}
 
       <div className="section-label">{t('vices.alcohol')}</div>
       <div className="input-row">

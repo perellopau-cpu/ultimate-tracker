@@ -60,25 +60,23 @@ export default function ExerciseLog({ val, onChange }) {
       )}
 
       <div className="section-label">{t('exercise.sauna')}</div>
-      <div className="input-row">
-        <div className="field">
-          <label>{t('exercise.rounds')}</label>
-          <input
-            type="number"
-            placeholder="3"
-            value={val.saunaRounds}
-            onChange={e => onChange({ ...val, saunaRounds: e.target.value })}
-          />
-        </div>
-        <div className="field">
-          <label>{t('exercise.time')}</label>
-          <input
-            type="number"
-            placeholder="45"
-            value={val.saunaTime}
-            onChange={e => onChange({ ...val, saunaTime: e.target.value })}
-          />
-        </div>
+      <div className="toggle-group">
+        {['1', '2', '3'].map(n => (
+          <button
+            key={n}
+            className={`toggle-btn ${val.saunaRounds === n ? 'active' : ''}`}
+            onClick={() => onChange({ ...val, saunaRounds: val.saunaRounds === n ? '' : n })}
+          >
+            {n} 🧖
+          </button>
+        ))}
+        <button
+          className={`toggle-btn ${val.saunaRounds === '' || !val.saunaRounds ? 'active' : ''}`}
+          onClick={() => onChange({ ...val, saunaRounds: '' })}
+          style={val.saunaRounds === '' || !val.saunaRounds ? { background: 'var(--surface2)' } : {}}
+        >
+          No sauna
+        </button>
       </div>
     </div>
   )

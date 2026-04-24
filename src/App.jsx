@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { supabase } from './lib/supabase'
 import { useTheme } from './hooks/useTheme'
 import { fmtKey, todayKey, emptyDay, BLOCKS } from './lib/utils'
@@ -33,7 +33,7 @@ const BLOCK_LABEL_KEY = {
   exercise: 'block.exercise', formation: 'block.formation', vices: 'block.vices',
 }
 
-function LogScreen({ block, dayData, date, isToday, userId, onBack, onSave }) {
+function LogScreen({ block, dayData, date, isToday, userId, onBack, onSave, lastWeight, lastKcal }) {
   const { t } = useT()
   const b = BLOCKS.find(b => b.id === block)
   const val = dayData[block]
@@ -56,7 +56,7 @@ function LogScreen({ block, dayData, date, isToday, userId, onBack, onSave }) {
       </div>
 
       {block === 'sleep'     && <SleepLog     val={val} onChange={v => onSave.update(block, v)} />}
-      {block === 'nutrition' && <NutritionLog  val={val} onChange={v => onSave.update(block, v)} />}
+      {block === 'nutrition' && <NutritionLog  val={val} onChange={v => onSave.update(block, v)} lastWeight={lastWeight} lastKcal={lastKcal} />}
       {block === 'exercise'  && <ExerciseLog   val={val} onChange={v => onSave.update(block, v)} />}
       {block === 'formation' && <FormationLog  val={val} onChange={v => onSave.update(block, v)} />}
       {block === 'vices'     && <VicesLog      val={val} onChange={v => onSave.update(block, v)} />}
@@ -155,6 +155,17 @@ export default function App() {
   const loggedDates = new Set(Object.keys(allData))
   const isToday  = todayKey() === dateKey
 
+  // Last known weight/kcal for nutrition pre-fill placeholder
+  const { lastWeight, lastKcal } = useMemo(() => {
+    const keys = Object.keys(allData).sort().reverse()
+    for (const k of keys) {
+      if (k === dateKey) continue
+      const nu = allData[k]?.nutrition
+      if (nu?.weight || nu?.kcal) return { lastWeight: nu.weight || '', lastKcal: nu.kcal || '' }
+    }
+    return { lastWeight: '', lastKcal: '' }
+  }, [allData, dateKey])
+
   const openBlock = (id) => { setSaveStatus('idle'); setActiveBlock(id); setScreen('log') }
   const goHome    = () => { setScreen('home'); setActiveBlock(null) }
 
@@ -181,6 +192,8 @@ export default function App() {
           userId={session.user.id}
           onBack={goHome}
           onSave={saveHandle}
+          lastWeight={lastWeight}
+          lastKcal={lastKcal}
         />
       )}
 

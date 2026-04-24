@@ -20,11 +20,11 @@ export const calcHoursSlept = (bedtime, waketime) => {
 }
 
 export const emptyDay = () => ({
-  sleep:     { bedtime: '', waketime: '', phone30: null },
+  sleep:     { bedtime: '', waketime: '', phone30: null, wakeUpSpeed: null },
   nutrition: { weight: '', kcal: '', o3: false, zmb6: false, creatine: false, fruitveg1: false, fruitveg2: false },
-  exercise:  { type: '', km: '', pace: '', saunaRounds: '', saunaTime: '' },
+  exercise:  { type: '', km: '', pace: '', saunaRounds: '' },
   formation: { study: '', reading: '' },
-  vices:     { cigarettes: '', alcoholCount: '', alcoholType: '', socialMediaUnder30: null },
+  vices:     { smokeType: null, cigaretteCount: '', cigarettes: '', alcoholCount: '', alcoholType: '', socialMediaUnder30: null },
 })
 
 export const completionOf = (block, data) => {
@@ -33,8 +33,8 @@ export const completionOf = (block, data) => {
     case 'sleep': {
       const d = data.sleep
       return {
-        done: (d.bedtime ? 1 : 0) + (d.waketime ? 1 : 0) + (d.phone30 !== null ? 1 : 0),
-        total: 3,
+        done: (d.bedtime ? 1 : 0) + (d.waketime ? 1 : 0) + (d.phone30 !== null ? 1 : 0) + (d.wakeUpSpeed !== null && d.wakeUpSpeed !== undefined ? 1 : 0),
+        total: 4,
       }
     }
     case 'nutrition': {
@@ -48,7 +48,7 @@ export const completionOf = (block, data) => {
     case 'exercise': {
       const d = data.exercise
       return {
-        done: (d.type ? 1 : 0) + (d.saunaRounds || d.saunaTime ? 1 : 0),
+        done: (d.type ? 1 : 0) + (d.saunaRounds ? 1 : 0),
         total: 2,
       }
     }
@@ -61,8 +61,10 @@ export const completionOf = (block, data) => {
     }
     case 'vices': {
       const d = data.vices
+      // backward-compat: old data has d.cigarettes, new has d.smokeType
+      const smokedFilled = (d.smokeType != null) || (d.cigarettes != null && d.cigarettes !== '')
       return {
-        done: (d.cigarettes !== '' ? 1 : 0) + (d.alcoholCount !== '' ? 1 : 0) + (d.socialMediaUnder30 !== null ? 1 : 0),
+        done: (smokedFilled ? 1 : 0) + (d.alcoholCount !== '' && d.alcoholCount != null ? 1 : 0) + (d.socialMediaUnder30 !== null ? 1 : 0),
         total: 3,
       }
     }

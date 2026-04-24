@@ -344,11 +344,16 @@ export default function Dashboard({ allData }) {
   const totalReading = formationData.reduce((a, d) => a + d.reading, 0)
 
   // ── 5. Vices data ────────────────────────────────────────────────────
-  const vicesData    = days.map(({ key, date }, i) => ({
-    x:      i % step === 0 ? xLabel(date, period) : '',
-    cigs:   parseInt(get(key).vices.cigarettes) || 0,
-    drinks: parseInt(get(key).vices.alcohol)    || 0,
-  }))
+  const vicesData    = days.map(({ key, date }, i) => {
+    const v = get(key).vices
+    // backward-compat: old data used v.cigarettes (number), new uses v.cigaretteCount
+    const cigs = parseInt(v.cigaretteCount || v.cigarettes) || 0
+    return {
+      x:      i % step === 0 ? xLabel(date, period) : '',
+      cigs,
+      drinks: parseInt(v.alcoholCount) || 0,
+    }
+  })
   const totalCigs   = vicesData.reduce((a, d) => a + d.cigs,   0)
   const totalDrinks = vicesData.reduce((a, d) => a + d.drinks, 0)
   const socialStreak = (key) => {
@@ -396,11 +401,8 @@ export default function Dashboard({ allData }) {
               width={38}
             />
             <Tooltip content={<SleepTooltip />} />
-            {/* target lines: 7h30m above base, and typical bedtime */}
             <ReferenceLine y={7.5} stroke="var(--accent)" strokeDasharray="4 3" strokeOpacity={0.4} />
-            {/* transparent bottom stack */}
             <Bar dataKey="bottom" stackId="s" fill="transparent" isAnimationActive={false} />
-            {/* colored sleep duration stack */}
             <Bar dataKey="duration" stackId="s" radius={[4, 4, 4, 4]} isAnimationActive={false}>
               {sleepData.map((d, i) => (
                 <Cell key={i} fill={d.duration != null ? 'var(--sleep)' : 'transparent'} />
@@ -408,6 +410,16 @@ export default function Dashboard({ allData }) {
             </Bar>
           </BarChart>
         </ResponsiveContainer>
+
+        <div style={{ marginTop: 10, fontFamily: "'DM Mono', monospace", fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>
+          Wake-up speed ⚡ fast · 🐢 slow
+        </div>
+        <StreakDots days={days} getValue={key => {
+          const s = get(key).sleep
+          if (s.wakeUpSpeed === 'fast') return 'yes'
+          if (s.wakeUpSpeed === 'slow') return 'no'
+          return ''
+        }} />
       </ChartCard>
 
       {/* ── Nutrition: dual Y-axis (weight + kcal) ── */}

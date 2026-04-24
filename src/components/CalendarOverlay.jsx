@@ -11,7 +11,9 @@ export default function CalendarOverlay({ selectedDate, loggedDates, onSelect, o
   const MONTH_NAMES = t('cal.months')
   const DAY_NAMES   = t('cal.days')
 
-  const firstDay = new Date(viewYear, viewMonth, 1).getDay()
+  // Monday-first: 0=Sun→6, 1=Mon→0, 2=Tue→1, ..., 6=Sat→5
+  const rawFirstDay = new Date(viewYear, viewMonth, 1).getDay()
+  const firstDay = (rawFirstDay + 6) % 7
   const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate()
 
   const cells = []
