@@ -6,22 +6,46 @@ const ITEM_H = 32
 const MAX_DRINKS = 20
 
 function DrinkPicker({ value, onChange }) {
-  const ref = useRef(null)
+  const ref      = useRef(null)
   const settling = useRef(false)
-  const items = Array.from({ length: MAX_DRINKS }, (_, i) => i + 1)
+  const valueRef = useRef(value)   // always up-to-date value for the wheel handler
+  const items    = Array.from({ length: MAX_DRINKS }, (_, i) => i + 1)
 
+  // Keep valueRef in sync
+  useEffect(() => { valueRef.current = value }, [value])
+
+  // Scroll to value when it changes from outside
   useEffect(() => {
     const el = ref.current
     if (!el || settling.current) return
     el.scrollTo({ top: (parseInt(value) - 1) * ITEM_H, behavior: 'smooth' })
   }, [value])
 
-  const onScroll = useCallback(() => {
+  // Non-passive wheel listener for mouse scroll support
+  useEffect(() => {
     const el = ref.current
     if (!el) return
+    const handler = (e) => {
+      e.preventDefault()
+      const current = parseInt(valueRef.current) || 1
+      const next = e.deltaY > 0
+        ? Math.min(current + 1, MAX_DRINKS)
+        : Math.max(current - 1, 1)
+      settling.current = true
+      el.scrollTo({ top: (next - 1) * ITEM_H, behavior: 'smooth' })
+      onChange(String(next))
+      setTimeout(() => { settling.current = false }, 300)
+    }
+    el.addEventListener('wheel', handler, { passive: false })
+    return () => el.removeEventListener('wheel', handler)
+  }, [onChange])
+
+  const onScroll = useCallback(() => {
+    const el = ref.current
+    if (!el || settling.current) return
     clearTimeout(el._t)
     el._t = setTimeout(() => {
-      const idx = Math.round(el.scrollTop / ITEM_H)
+      const idx     = Math.round(el.scrollTop / ITEM_H)
       const clamped = Math.max(0, Math.min(idx, items.length - 1))
       settling.current = true
       el.scrollTo({ top: clamped * ITEM_H, behavior: 'smooth' })
