@@ -488,7 +488,7 @@ export default function Dashboard({ allData }) {
           ))}
         </div>
         <ResponsiveContainer width="100%" height={90}>
-          <BarChart data={exerciseData} margin={{ top: 4, right: 4, left: -28, bottom: 0 }}>
+          <BarChart data={exerciseData} margin={{ top: 4, right: 4, left: 4, bottom: 0 }}>
             <XAxis dataKey="x" tick={axisTick} tickLine={false} axisLine={false} />
             <YAxis domain={[0, 1]} hide />
             <Tooltip content={({ active, payload }) => {

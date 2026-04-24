@@ -114,6 +114,18 @@ export default function App() {
     fetchLogs()
   }, [session])
 
+  // ── Last known nutrition values (for placeholder pre-fill) ──────────
+  const { lastWeight, lastKcal } = useMemo(() => {
+    const currentKey = fmtKey(selectedDate)
+    const keys = Object.keys(allData).sort().reverse()
+    for (const k of keys) {
+      if (k === currentKey) continue
+      const nu = allData[k]?.nutrition
+      if (nu?.weight || nu?.kcal) return { lastWeight: nu.weight || '', lastKcal: nu.kcal || '' }
+    }
+    return { lastWeight: '', lastKcal: '' }
+  }, [allData, selectedDate])
+
   // ── Auto-save ─────────────────────────────────────────────────────
   const updateBlock = useCallback((block, val) => {
     const dateKey = fmtKey(selectedDate)
@@ -154,17 +166,6 @@ export default function App() {
   const dayData  = allData[dateKey] || emptyDay()
   const loggedDates = new Set(Object.keys(allData))
   const isToday  = todayKey() === dateKey
-
-  // Last known weight/kcal for nutrition pre-fill placeholder
-  const { lastWeight, lastKcal } = useMemo(() => {
-    const keys = Object.keys(allData).sort().reverse()
-    for (const k of keys) {
-      if (k === dateKey) continue
-      const nu = allData[k]?.nutrition
-      if (nu?.weight || nu?.kcal) return { lastWeight: nu.weight || '', lastKcal: nu.kcal || '' }
-    }
-    return { lastWeight: '', lastKcal: '' }
-  }, [allData, dateKey])
 
   const openBlock = (id) => { setSaveStatus('idle'); setActiveBlock(id); setScreen('log') }
   const goHome    = () => { setScreen('home'); setActiveBlock(null) }
