@@ -347,11 +347,12 @@ export default function Dashboard({ allData }) {
   const vicesData    = days.map(({ key, date }, i) => {
     const v = get(key).vices
     // backward-compat: old data used v.cigarettes (number), new uses v.cigaretteCount
-    const cigs = parseInt(v.cigaretteCount || v.cigarettes) || 0
+    const cigs   = parseInt(v.cigaretteCount || v.cigarettes) || 0
+    const drinks = v.alcoholCount === '0' ? 0 : parseInt(v.alcoholCount) || 0
     return {
-      x:      i % step === 0 ? xLabel(date, period) : '',
+      x: i % step === 0 ? xLabel(date, period) : '',
       cigs,
-      drinks: parseInt(v.alcoholCount) || 0,
+      drinks,
     }
   })
   const totalCigs   = vicesData.reduce((a, d) => a + d.cigs,   0)
