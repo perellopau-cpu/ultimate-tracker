@@ -2,7 +2,7 @@ import { useRef, useEffect, useCallback } from 'react'
 import { useT } from '../../contexts/LanguageContext'
 
 // ── Drum-roll scroll picker ───────────────────────────────────────────
-const ITEM_H = 48
+const ITEM_H = 32
 const MAX_DRINKS = 20
 
 function DrinkPicker({ value, onChange }) {
@@ -10,11 +10,10 @@ function DrinkPicker({ value, onChange }) {
   const settling = useRef(false)
   const items = Array.from({ length: MAX_DRINKS }, (_, i) => i + 1)
 
-  // Scroll to current value on mount / value change (from outside)
   useEffect(() => {
     const el = ref.current
     if (!el || settling.current) return
-    el.scrollTo({ top: (value - 1) * ITEM_H, behavior: 'smooth' })
+    el.scrollTo({ top: (parseInt(value) - 1) * ITEM_H, behavior: 'smooth' })
   }, [value])
 
   const onScroll = useCallback(() => {
@@ -32,25 +31,28 @@ function DrinkPicker({ value, onChange }) {
   }, [items, onChange])
 
   return (
-    <div style={{ position: 'relative', height: ITEM_H * 3, marginTop: 12 }}>
-      {/* Centre highlight */}
+    <div style={{
+      position: 'relative', height: ITEM_H * 3, marginTop: 10,
+      background: 'var(--surface2)', borderRadius: 10,
+      border: '1px solid var(--border)', overflow: 'hidden',
+    }}>
+      {/* Centre highlight band */}
       <div style={{
         position: 'absolute', top: ITEM_H, left: 0, right: 0, height: ITEM_H,
         background: 'var(--accent-bg)',
         borderTop: '1px solid var(--accent)', borderBottom: '1px solid var(--accent)',
-        borderRadius: 8, pointerEvents: 'none', zIndex: 1,
+        pointerEvents: 'none', zIndex: 1,
       }} />
-
       {/* Fade top */}
       <div style={{
         position: 'absolute', top: 0, left: 0, right: 0, height: ITEM_H,
-        background: 'linear-gradient(to bottom, var(--surface), transparent)',
+        background: 'linear-gradient(to bottom, var(--surface2), transparent)',
         pointerEvents: 'none', zIndex: 2,
       }} />
       {/* Fade bottom */}
       <div style={{
         position: 'absolute', bottom: 0, left: 0, right: 0, height: ITEM_H,
-        background: 'linear-gradient(to top, var(--surface), transparent)',
+        background: 'linear-gradient(to top, var(--surface2), transparent)',
         pointerEvents: 'none', zIndex: 2,
       }} />
 
@@ -60,37 +62,28 @@ function DrinkPicker({ value, onChange }) {
         style={{
           height: '100%', overflowY: 'scroll',
           scrollSnapType: 'y mandatory',
-          scrollbarWidth: 'none',
-          msOverflowStyle: 'none',
+          scrollbarWidth: 'none', msOverflowStyle: 'none',
         }}
       >
-        <style>{`.drink-picker-scroll::-webkit-scrollbar{display:none}`}</style>
-        {/* top spacer so first item centres */}
-        <div style={{ height: ITEM_H, scrollSnapAlign: 'none' }} />
+        <div style={{ height: ITEM_H }} />
         {items.map(n => {
           const active = String(n) === String(value)
           return (
-            <div
-              key={n}
-              style={{
-                height: ITEM_H, scrollSnapAlign: 'center',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontFamily: "'DM Mono', monospace",
-                fontSize: active ? 26 : 17,
-                fontWeight: active ? 700 : 400,
-                color: active ? 'var(--accent)' : 'var(--muted)',
-                transition: 'font-size .12s, color .12s',
-                cursor: 'pointer',
-                userSelect: 'none',
-              }}
-              onClick={() => onChange(String(n))}
-            >
+            <div key={n} style={{
+              height: ITEM_H, scrollSnapAlign: 'center',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontFamily: "'DM Mono', monospace",
+              fontSize: active ? 18 : 13,
+              fontWeight: active ? 700 : 400,
+              color: active ? 'var(--accent)' : 'var(--muted)',
+              transition: 'font-size .1s, color .1s',
+              userSelect: 'none',
+            }}>
               {n}
             </div>
           )
         })}
-        {/* bottom spacer */}
-        <div style={{ height: ITEM_H, scrollSnapAlign: 'none' }} />
+        <div style={{ height: ITEM_H }} />
       </div>
     </div>
   )
