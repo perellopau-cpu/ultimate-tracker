@@ -402,7 +402,7 @@ export default function Dashboard({ allData }) {
               tick={axisTick}
               tickLine={false}
               axisLine={false}
-              width={38}
+              width={46}
             />
             <Tooltip content={<SleepTooltip />} />
             <ReferenceLine y={7.5} stroke="var(--accent)" strokeDasharray="4 3" strokeOpacity={0.4} />
