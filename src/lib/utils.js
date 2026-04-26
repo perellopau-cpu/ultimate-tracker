@@ -20,7 +20,7 @@ export const calcHoursSlept = (bedtime, waketime) => {
 }
 
 export const emptyDay = () => ({
-  sleep:     { bedtime: '', waketime: '', phone30: null, wakeUpSpeed: null },
+  sleep:     { bedtime: '', waketime: '', phone30: null, wakeUpSpeed: null, legsUp: null, breathwork: null },
   nutrition: { weight: '', kcal: '', o3: false, zmb6: false, creatine: false, fruitveg1: false, fruitveg2: false },
   exercise:  { type: '', km: '', pace: '', saunaRounds: '' },
   formation: { study: '', reading: '' },
@@ -33,8 +33,13 @@ export const completionOf = (block, data) => {
     case 'sleep': {
       const d = data.sleep
       return {
-        done: (d.bedtime ? 1 : 0) + (d.waketime ? 1 : 0) + (d.phone30 !== null ? 1 : 0) + (d.wakeUpSpeed !== null && d.wakeUpSpeed !== undefined ? 1 : 0),
-        total: 4,
+        done:  (d.bedtime ? 1 : 0)
+             + (d.waketime ? 1 : 0)
+             + (d.phone30 !== null ? 1 : 0)
+             + (d.wakeUpSpeed != null ? 1 : 0)
+             + (d.legsUp !== null && d.legsUp !== undefined ? 1 : 0)
+             + (d.breathwork !== null && d.breathwork !== undefined ? 1 : 0),
+        total: 6,
       }
     }
     case 'nutrition': {

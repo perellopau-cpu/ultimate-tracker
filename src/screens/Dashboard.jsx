@@ -125,16 +125,19 @@ function ChartCard({ emoji, title, sub, children }) {
 }
 
 // ── Streak dots ───────────────────────────────────────────────────────
-function StreakDots({ days, getValue }) {
+function StreakDots({ days, getValue, noColor }) {
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 3, marginTop: 8 }}>
       {days.map(({ key }) => {
         const v = getValue(key)
+        const bg = v === 'yes' ? 'var(--accent)'
+          : v === 'no' ? (noColor || 'var(--danger)')
+          : 'var(--border)'
         return (
           <div key={key} title={key} style={{
             width: 14, height: 14, borderRadius: 3,
-            background: v === 'yes' ? 'var(--accent)' : v === 'no' ? 'var(--danger)' : 'var(--border)',
-            opacity: v === 'no' ? 0.6 : 1,
+            background: bg,
+            opacity: v === 'no' ? 0.7 : 1,
           }} />
         )
       })}
@@ -413,7 +416,7 @@ export default function Dashboard({ allData }) {
         </ResponsiveContainer>
 
         <div style={{ marginTop: 10, fontFamily: "'DM Mono', monospace", fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>
-          Wake-up speed ⚡ fast · 🐢 slow
+          Wake-up speed ⚡ fast · slow
         </div>
         <StreakDots days={days} getValue={key => {
           const s = get(key).sleep
@@ -515,6 +518,19 @@ export default function Dashboard({ allData }) {
             </Bar>
           </BarChart>
         </ResponsiveContainer>
+        <div style={{ marginTop: 12, fontFamily: "'DM Mono', monospace", fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>
+          Sauna 🧖
+        </div>
+        <StreakDots
+          days={days}
+          noColor="#f5c842"
+          getValue={key => {
+            const r = get(key).exercise.saunaRounds
+            if (r === '1' || r === '2' || r === '3') return 'yes'
+            if (r === 'no') return 'no'
+            return ''
+          }}
+        />
       </ChartCard>
 
       {/* ── Formation ── */}

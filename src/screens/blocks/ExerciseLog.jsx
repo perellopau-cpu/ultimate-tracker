@@ -71,9 +71,8 @@ export default function ExerciseLog({ val, onChange }) {
           </button>
         ))}
         <button
-          className={`toggle-btn ${val.saunaRounds === '' || !val.saunaRounds ? 'active' : ''}`}
-          onClick={() => onChange({ ...val, saunaRounds: '' })}
-          style={val.saunaRounds === '' || !val.saunaRounds ? { background: 'var(--surface2)' } : {}}
+          className={`toggle-btn ${val.saunaRounds === 'no' ? 'active' : ''}`}
+          onClick={() => onChange({ ...val, saunaRounds: val.saunaRounds === 'no' ? '' : 'no' })}
         >
           No sauna
         </button>

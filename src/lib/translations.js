@@ -58,6 +58,8 @@ const t = {
     'sleep.wakeSpeed': 'Woke up...',
     'sleep.fast': 'Fast',
     'sleep.slow': 'Slow',
+    'sleep.legsUp': '10 min legs up before bed',
+    'sleep.breathwork': '4-7-8 breathwork',
     'sleep.yes': 'Yes',
     'sleep.no': 'No',
 
@@ -190,6 +192,8 @@ const t = {
     'sleep.wakeSpeed': 'Me desperté...',
     'sleep.fast': 'Rápido',
     'sleep.slow': 'Lento',
+    'sleep.legsUp': '10 min piernas en alto antes de dormir',
+    'sleep.breathwork': 'Respiración 4-7-8',
     'sleep.yes': 'Sí',
     'sleep.no': 'No',
 
