@@ -306,10 +306,15 @@ export default function Dashboard({ allData }) {
       kcal: parseInt(nu.kcal)     || null,
     }
   })
-  const validWeights = nutritionData.filter(d => d.kg != null).map(d => d.kg)
-  const avgWeight    = validWeights.length
-    ? (validWeights.reduce((a, b) => a + b) / validWeights.length).toFixed(1)
-    : '—'
+  // Most recent weight across ALL data (not just current period)
+  const actualWeight = useMemo(() => {
+    const keys = Object.keys(allData).sort().reverse()
+    for (const k of keys) {
+      const w = parseFloat(allData[k]?.nutrition?.weight)
+      if (w) return w
+    }
+    return null
+  }, [allData])
 
   const suppStreak = (key) => {
     const nu = get(key).nutrition
@@ -427,7 +432,7 @@ export default function Dashboard({ allData }) {
       </ChartCard>
 
       {/* ── Nutrition: dual Y-axis (weight + kcal) ── */}
-      <ChartCard emoji="⚖️" title={t('block.nutrition')} sub={`Avg weight ${avgWeight} kg · goal 80 kg`}>
+      <ChartCard emoji="⚖️" title={t('block.nutrition')} sub={`Actual weight ${actualWeight != null ? actualWeight + ' kg' : '—'} · goal 80 kg`}>
         <ResponsiveContainer width="100%" height={140}>
           <ComposedChart data={nutritionData} margin={{ top: 8, right: 36, left: -10, bottom: 0 }}>
             <XAxis dataKey="x" tick={axisTick} tickLine={false} axisLine={false} />
@@ -596,23 +601,47 @@ export default function Dashboard({ allData }) {
         </div>
         <StreakDots days={days} getValue={socialStreak} />
 
-        <div style={{ marginTop: 14, display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
-          <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 11, color: 'var(--muted)' }}>
-            📱 Phone time / week
-          </span>
-          <input
-            type="text"
-            placeholder="e.g. 3h 20m"
-            value={screenTime}
-            onChange={e => { setScreenTime(e.target.value); saveScreenTime(e.target.value) }}
-            style={{
-              width: 96, padding: '5px 8px',
-              background: 'var(--surface2)', border: '1px solid var(--border)',
-              borderRadius: 6, fontFamily: "'DM Mono', monospace", fontSize: 11,
-              color: 'var(--text)', textAlign: 'right', outline: 'none',
-            }}
-          />
-        </div>
+        {/* ── Avg screen time picker ── */}
+        {(() => {
+          const hrs = parseScreenTime(screenTime) ?? 0
+          const curH = Math.min(12, Math.floor(hrs))
+          const curM = [0, 15, 30, 45].reduce((p, c) => Math.abs(c - Math.round((hrs % 1) * 60)) < Math.abs(p - Math.round((hrs % 1) * 60)) ? c : p, 0)
+          const update = (h, m) => {
+            const h2 = Math.max(0, Math.min(12, h))
+            const str = h2 === 0 && m === 0 ? '' : m === 0 ? `${h2}h` : h2 === 0 ? `${m}m` : `${h2}h ${m}m`
+            setScreenTime(str); saveScreenTime(str)
+          }
+          const btnStyle = (active) => ({
+            padding: '5px 10px', borderRadius: 6, fontSize: 11, cursor: 'pointer',
+            fontFamily: "'DM Mono', monospace", border: '1px solid var(--border)',
+            background: active ? 'var(--accent)' : 'var(--surface2)',
+            color: active ? 'var(--accent-text)' : 'var(--muted)',
+            fontWeight: active ? 700 : 400,
+          })
+          return (
+            <div style={{ marginTop: 14, marginBottom: 4 }}>
+              <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 11, color: 'var(--muted)', marginBottom: 8 }}>
+                📱 Avg screen time / day
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                {/* Hours stepper */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                  <button style={btnStyle(false)} onClick={() => update(curH - 1, curM)}>‹</button>
+                  <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 13, color: 'var(--text)', minWidth: 28, textAlign: 'center', fontWeight: 600 }}>{curH}h</span>
+                  <button style={btnStyle(false)} onClick={() => update(curH + 1, curM)}>›</button>
+                </div>
+                {/* Minutes buttons */}
+                <div style={{ display: 'flex', gap: 4 }}>
+                  {[0, 15, 30, 45].map(m => (
+                    <button key={m} style={btnStyle(curM === m)} onClick={() => update(curH, m)}>
+                      {m === 0 ? '00m' : `${m}m`}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )
+        })()}
         {phoneChartData.filter(d => d.hrs != null).length >= 2 ? (
           <ResponsiveContainer width="100%" height={90}>
             <LineChart data={phoneChartData} margin={{ top: 8, right: 4, left: -28, bottom: 0 }}>
