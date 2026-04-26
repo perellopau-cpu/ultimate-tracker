@@ -1,30 +1,49 @@
 import { useT } from '../../contexts/LanguageContext'
 
+const STUDY_OPTIONS = [
+  { label: '30m',  value: '30'  },
+  { label: '1h',   value: '60'  },
+  { label: '1h30', value: '90'  },
+  { label: '2h',   value: '120' },
+  { label: '2h+',  value: '150' },
+]
+
+const READING_OPTIONS = [
+  { label: '15m', value: '15' },
+  { label: '30m', value: '30' },
+  { label: '45m', value: '45' },
+  { label: '1h+', value: '75' },
+]
+
 export default function FormationLog({ val, onChange }) {
   const { t } = useT()
 
   return (
     <div>
-      <div className="section-label">{t('formation.timeInvested')}</div>
-      <div className="input-row">
-        <div className="field">
-          <label>{t('formation.study')}</label>
-          <input
-            type="number"
-            placeholder="60"
-            value={val.study}
-            onChange={e => onChange({ ...val, study: e.target.value })}
-          />
-        </div>
-        <div className="field">
-          <label>{t('formation.reading')}</label>
-          <input
-            type="number"
-            placeholder="30"
-            value={val.reading}
-            onChange={e => onChange({ ...val, reading: e.target.value })}
-          />
-        </div>
+      <div className="section-label">{t('formation.study')}</div>
+      <div className="toggle-group">
+        {STUDY_OPTIONS.map(({ label, value }) => (
+          <button
+            key={value}
+            className={`toggle-btn ${val.study === value ? 'active' : ''}`}
+            onClick={() => onChange({ ...val, study: val.study === value ? '' : value })}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      <div className="section-label">{t('formation.reading')}</div>
+      <div className="toggle-group">
+        {READING_OPTIONS.map(({ label, value }) => (
+          <button
+            key={value}
+            className={`toggle-btn ${val.reading === value ? 'active' : ''}`}
+            onClick={() => onChange({ ...val, reading: val.reading === value ? '' : value })}
+          >
+            {label}
+          </button>
+        ))}
       </div>
     </div>
   )
