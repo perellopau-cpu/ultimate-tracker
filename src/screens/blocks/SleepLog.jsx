@@ -36,30 +36,6 @@ export default function SleepLog({ val, onChange }) {
         </div>
       )}
 
-      <div className="section-label">{t('sleep.legsUp')}</div>
-      <div className="toggle-group">
-        <button
-          className={`toggle-btn ${val.legsUp === true ? 'active' : ''}`}
-          onClick={() => onChange({ ...val, legsUp: val.legsUp === true ? null : true })}
-        >{t('sleep.yes')}</button>
-        <button
-          className={`toggle-btn danger ${val.legsUp === false ? 'active' : ''}`}
-          onClick={() => onChange({ ...val, legsUp: val.legsUp === false ? null : false })}
-        >{t('sleep.no')}</button>
-      </div>
-
-      <div className="section-label">{t('sleep.breathwork')}</div>
-      <div className="toggle-group">
-        <button
-          className={`toggle-btn ${val.breathwork === true ? 'active' : ''}`}
-          onClick={() => onChange({ ...val, breathwork: val.breathwork === true ? null : true })}
-        >{t('sleep.yes')}</button>
-        <button
-          className={`toggle-btn danger ${val.breathwork === false ? 'active' : ''}`}
-          onClick={() => onChange({ ...val, breathwork: val.breathwork === false ? null : false })}
-        >{t('sleep.no')}</button>
-      </div>
-
       <div className="section-label">{t('sleep.wakeSpeed')}</div>
       <div className="toggle-group">
         <button
@@ -91,6 +67,30 @@ export default function SleepLog({ val, onChange }) {
         >
           {t('sleep.no')}
         </button>
+      </div>
+
+      <div className="section-label">{t('sleep.legsUp')}</div>
+      <div className="toggle-group">
+        <button
+          className={`toggle-btn ${val.legsUp === true ? 'active' : ''}`}
+          onClick={() => onChange({ ...val, legsUp: val.legsUp === true ? null : true })}
+        >{t('sleep.yes')}</button>
+        <button
+          className={`toggle-btn danger ${val.legsUp === false ? 'active' : ''}`}
+          onClick={() => onChange({ ...val, legsUp: val.legsUp === false ? null : false })}
+        >{t('sleep.no')}</button>
+      </div>
+
+      <div className="section-label">{t('sleep.breathwork')}</div>
+      <div className="toggle-group">
+        <button
+          className={`toggle-btn ${val.breathwork === true ? 'active' : ''}`}
+          onClick={() => onChange({ ...val, breathwork: val.breathwork === true ? null : true })}
+        >{t('sleep.yes')}</button>
+        <button
+          className={`toggle-btn danger ${val.breathwork === false ? 'active' : ''}`}
+          onClick={() => onChange({ ...val, breathwork: val.breathwork === false ? null : false })}
+        >{t('sleep.no')}</button>
       </div>
     </div>
   )
