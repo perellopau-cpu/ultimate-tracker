@@ -1,14 +1,15 @@
 import { useT } from '../../contexts/LanguageContext'
 
 const STUDY_OPTIONS = [
+  { label: '0',    value: '0'   },
   { label: '30m',  value: '30'  },
   { label: '1h',   value: '60'  },
   { label: '1h30', value: '90'  },
-  { label: '2h',   value: '120' },
   { label: '2h+',  value: '150' },
 ]
 
 const READING_OPTIONS = [
+  { label: '0',   value: '0'  },
   { label: '15m', value: '15' },
   { label: '30m', value: '30' },
   { label: '45m', value: '45' },
