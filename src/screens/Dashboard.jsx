@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import {
   BarChart, Bar, ComposedChart, Line, LineChart,
   XAxis, YAxis, Tooltip, ReferenceLine,
@@ -226,6 +226,102 @@ function NutritionTooltip({ active, payload, label }) {
     </div>
   )
 }
+
+// ── Drum roll picker ──────────────────────────────────────────────────
+const DRUM_H = 32
+
+function DrumPicker({ items, value, onChange, width = 52 }) {
+  const ref      = useRef(null)
+  const settling = useRef(false)
+  const valRef   = useRef(value)
+  useEffect(() => { valRef.current = value }, [value])
+
+  // Initial scroll (no animation)
+  useEffect(() => {
+    const el  = ref.current
+    const idx = items.indexOf(value)
+    if (el && idx >= 0) el.scrollTop = idx * DRUM_H
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // Sync scroll when value changes externally
+  useEffect(() => {
+    if (settling.current) return
+    const el  = ref.current
+    const idx = items.indexOf(value)
+    if (el && idx >= 0) el.scrollTo({ top: idx * DRUM_H, behavior: 'smooth' })
+  }, [value, items])
+
+  // Non-passive wheel handler for desktop
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const handler = (e) => {
+      e.preventDefault()
+      const idx  = items.indexOf(valRef.current)
+      const next = e.deltaY > 0
+        ? Math.min(idx + 1, items.length - 1)
+        : Math.max(idx - 1, 0)
+      settling.current = true
+      el.scrollTo({ top: next * DRUM_H, behavior: 'smooth' })
+      onChange(items[next])
+      setTimeout(() => { settling.current = false }, 300)
+    }
+    el.addEventListener('wheel', handler, { passive: false })
+    return () => el.removeEventListener('wheel', handler)
+  }, [items, onChange])
+
+  const onScroll = () => {
+    if (settling.current) return
+    const el  = ref.current
+    if (!el) return
+    const idx = Math.round(el.scrollTop / DRUM_H)
+    if (items[idx] != null && items[idx] !== valRef.current) onChange(items[idx])
+  }
+
+  const go = (dir) => {
+    const idx  = items.indexOf(value)
+    const next = Math.max(0, Math.min(items.length - 1, idx + dir))
+    if (next !== idx) onChange(items[next])
+  }
+
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+      <button onClick={() => go(-1)} style={{ background: 'none', border: 'none', padding: '0 5px', cursor: 'pointer', color: 'var(--muted)', fontSize: 18, fontFamily: 'inherit', lineHeight: 1 }}>‹</button>
+      <div style={{ position: 'relative', width, height: DRUM_H, overflow: 'hidden', borderRadius: 6 }}>
+        {/* highlight band */}
+        <div style={{ position: 'absolute', inset: 0, background: 'var(--surface2)', border: '1px solid var(--border)', borderRadius: 6, zIndex: 0, pointerEvents: 'none' }} />
+        {/* top fade */}
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 10, background: 'linear-gradient(var(--surface), transparent)', zIndex: 3, pointerEvents: 'none' }} />
+        {/* scroll list */}
+        <div
+          ref={ref}
+          onScroll={onScroll}
+          style={{
+            position: 'relative', height: DRUM_H, overflowY: 'scroll',
+            scrollSnapType: 'y mandatory', scrollbarWidth: 'none', msOverflowStyle: 'none',
+            zIndex: 2,
+          }}
+        >
+          {items.map(item => (
+            <div key={item} style={{
+              height: DRUM_H, display: 'flex', alignItems: 'center', justifyContent: 'center',
+              scrollSnapAlign: 'center',
+              fontFamily: "'DM Mono', monospace", fontSize: 14, fontWeight: 700,
+              color: 'var(--text)',
+            }}>{item}</div>
+          ))}
+        </div>
+        {/* bottom fade */}
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 10, background: 'linear-gradient(transparent, var(--surface))', zIndex: 3, pointerEvents: 'none' }} />
+      </div>
+      <button onClick={() => go(1)} style={{ background: 'none', border: 'none', padding: '0 5px', cursor: 'pointer', color: 'var(--muted)', fontSize: 18, fontFamily: 'inherit', lineHeight: 1 }}>›</button>
+    </div>
+  )
+}
+
+const HOURS_ITEMS   = Array.from({ length: 13 }, (_, i) => String(i))
+const MINUTES_ITEMS = Array.from({ length: 60 }, (_, i) => String(i).padStart(2, '0'))
 
 // ── Main Dashboard ────────────────────────────────────────────────────
 export default function Dashboard({ allData }) {
@@ -601,43 +697,28 @@ export default function Dashboard({ allData }) {
         </div>
         <StreakDots days={days} getValue={socialStreak} />
 
-        {/* ── Avg screen time picker ── */}
+        {/* ── Weekly avg screen time ── */}
         {(() => {
-          const hrs = parseScreenTime(screenTime) ?? 0
+          const hrs  = parseScreenTime(screenTime) ?? 0
           const curH = Math.min(12, Math.floor(hrs))
-          const curM = [0, 15, 30, 45].reduce((p, c) => Math.abs(c - Math.round((hrs % 1) * 60)) < Math.abs(p - Math.round((hrs % 1) * 60)) ? c : p, 0)
+          const curM = Math.min(59, Math.round((hrs % 1) * 60))
+          const hVal = String(curH)
+          const mVal = String(curM).padStart(2, '0')
           const update = (h, m) => {
-            const h2 = Math.max(0, Math.min(12, h))
-            const str = h2 === 0 && m === 0 ? '' : m === 0 ? `${h2}h` : h2 === 0 ? `${m}m` : `${h2}h ${m}m`
+            const h2 = parseInt(h), m2 = parseInt(m)
+            const str = h2 === 0 && m2 === 0 ? '' : m2 === 0 ? `${h2}h` : h2 === 0 ? `${m2}m` : `${h2}h ${m2}m`
             setScreenTime(str); saveScreenTime(str)
           }
-          const btnStyle = (active) => ({
-            padding: '5px 10px', borderRadius: 6, fontSize: 11, cursor: 'pointer',
-            fontFamily: "'DM Mono', monospace", border: '1px solid var(--border)',
-            background: active ? 'var(--accent)' : 'var(--surface2)',
-            color: active ? 'var(--accent-text)' : 'var(--muted)',
-            fontWeight: active ? 700 : 400,
-          })
           return (
             <div style={{ marginTop: 14, marginBottom: 4 }}>
               <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 11, color: 'var(--muted)', marginBottom: 8 }}>
-                📱 Avg screen time / day
+                📱 Weekly avg screen time
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                {/* Hours stepper */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                  <button style={btnStyle(false)} onClick={() => update(curH - 1, curM)}>‹</button>
-                  <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 13, color: 'var(--text)', minWidth: 28, textAlign: 'center', fontWeight: 600 }}>{curH}h</span>
-                  <button style={btnStyle(false)} onClick={() => update(curH + 1, curM)}>›</button>
-                </div>
-                {/* Minutes buttons */}
-                <div style={{ display: 'flex', gap: 4 }}>
-                  {[0, 15, 30, 45].map(m => (
-                    <button key={m} style={btnStyle(curM === m)} onClick={() => update(curH, m)}>
-                      {m === 0 ? '00m' : `${m}m`}
-                    </button>
-                  ))}
-                </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <DrumPicker items={HOURS_ITEMS}   value={hVal} onChange={h => update(h, mVal)} width={48} />
+                <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 12, color: 'var(--muted)' }}>h</span>
+                <DrumPicker items={MINUTES_ITEMS} value={mVal} onChange={m => update(hVal, m)} width={48} />
+                <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 12, color: 'var(--muted)' }}>m</span>
               </div>
             </div>
           )
