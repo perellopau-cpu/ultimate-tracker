@@ -159,7 +159,7 @@ function StatRow({ stats }) {
     <div style={{ display: 'flex', gap: 8, marginBottom: 14 }}>
       {stats.map(s => (
         <div key={s.label} style={{ flex: 1, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', padding: '14px 12px', boxShadow: 'var(--shadow-sm)' }}>
-          <div style={{ fontFamily: "'DM Serif Display', serif", fontSize: 22, color: s.color }}>{s.value}</div>
+          <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 22, fontWeight: 700, color: s.color }}>{s.value}</div>
           <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 9, color: 'var(--muted)', marginTop: 2, letterSpacing: '.06em', textTransform: 'uppercase' }}>{s.label}</div>
         </div>
       ))}
