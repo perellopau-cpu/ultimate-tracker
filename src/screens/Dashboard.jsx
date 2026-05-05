@@ -212,7 +212,7 @@ function SleepTooltip({ active, payload }) {
   )
 }
 
-// ── Nutrition dual-axis tooltip ───────────────────────────────────────
+// ── Nutrition tooltip ─────────────────────────────────────────────────
 function NutritionTooltip({ active, payload, label }) {
   if (!active || !payload?.length) return null
   return (
@@ -220,7 +220,7 @@ function NutritionTooltip({ active, payload, label }) {
       <div style={{ color: 'var(--muted)', fontSize: 10, marginBottom: 4 }}>{label}</div>
       {payload.map(p => p.value != null && (
         <div key={p.dataKey} style={{ color: p.color, fontWeight: 600 }}>
-          {p.dataKey === 'kg' ? `${p.value} kg` : `${p.value} kcal`}
+          {p.value} kg
         </div>
       ))}
     </div>
@@ -517,58 +517,81 @@ export default function Dashboard({ allData }) {
         </ResponsiveContainer>
 
         <div style={{ marginTop: 10, fontFamily: "'DM Mono', monospace", fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>
-          Wake-up speed ⚡ fast · slow
+          ⚡ Wake-up speed — fast · slow
         </div>
         <StreakDots days={days} getValue={key => {
           const s = get(key).sleep
           if (s.wakeUpSpeed === 'fast') return 'yes'
           if (s.wakeUpSpeed === 'slow') return 'no'
           return ''
+        }} noColor="var(--danger)" />
+
+        <div style={{ marginTop: 10, fontFamily: "'DM Mono', monospace", fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>
+          📵 No phone in first 30 min
+        </div>
+        <StreakDots days={days} getValue={key => {
+          const v = get(key).sleep.phone30
+          // No phone = good (green), Phone = bad (red)
+          if (v === false) return 'yes'
+          if (v === true)  return 'no'
+          return ''
+        }} />
+
+        <div style={{ marginTop: 10, fontFamily: "'DM Mono', monospace", fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>
+          🦵 10 min legs up
+        </div>
+        <StreakDots days={days} getValue={key => {
+          const v = get(key).sleep.legsUp
+          if (v === true)  return 'yes'
+          if (v === false) return 'no'
+          return ''
+        }} />
+
+        <div style={{ marginTop: 10, fontFamily: "'DM Mono', monospace", fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>
+          🫁 4-7-8 Breathwork
+        </div>
+        <StreakDots days={days} getValue={key => {
+          const v = get(key).sleep.breathwork
+          if (v === true)  return 'yes'
+          if (v === false) return 'no'
+          return ''
+        }} />
+
+        <div style={{ marginTop: 10, fontFamily: "'DM Mono', monospace", fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>
+          👃 Nasal strip
+        </div>
+        <StreakDots days={days} getValue={key => {
+          const v = get(key).sleep.nasalStrip
+          if (v === true)  return 'yes'
+          if (v === false) return 'no'
+          return ''
+        }} />
+
+        <div style={{ marginTop: 10, fontFamily: "'DM Mono', monospace", fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>
+          🦷 Dental floss
+        </div>
+        <StreakDots days={days} getValue={key => {
+          const v = get(key).sleep.dentalFloss
+          if (v === true)  return 'yes'
+          if (v === false) return 'no'
+          return ''
         }} />
       </ChartCard>
 
-      {/* ── Nutrition: dual Y-axis (weight + kcal) ── */}
+      {/* ── Nutrition: weight line ── */}
       <ChartCard emoji="⚖️" title={t('block.nutrition')} sub={`Actual weight ${actualWeight != null ? actualWeight + ' kg' : '—'} · goal 80 kg`}>
         <ResponsiveContainer width="100%" height={140}>
-          <ComposedChart data={nutritionData} margin={{ top: 8, right: 36, left: -10, bottom: 0 }}>
+          <ComposedChart data={nutritionData} margin={{ top: 8, right: 8, left: -10, bottom: 0 }}>
             <XAxis dataKey="x" tick={axisTick} tickLine={false} axisLine={false} />
-
-            {/* Left Y: weight */}
             <YAxis yAxisId="kg" domain={[70, 80]} ticks={[70, 72, 74, 76, 78, 80]} tick={axisTick} tickLine={false} axisLine={false} width={28} />
-
-            {/* Right Y: kcal */}
-            <YAxis yAxisId="kcal" orientation="right" domain={[2400, 3200]} ticks={[2400, 2800, 3200]} tick={axisTick} tickLine={false} axisLine={false} width={34} />
-
             <Tooltip content={<NutritionTooltip />} />
-
-            {/* Goal line at 80 kg */}
             <ReferenceLine yAxisId="kg" y={80} stroke="var(--nutrition)" strokeDasharray="4 3" strokeOpacity={0.4} />
-
-            {/* Weight line */}
             <Line yAxisId="kg" type="monotone" dataKey="kg"
               stroke="var(--nutrition)" strokeWidth={2}
               dot={{ r: 3, fill: 'var(--nutrition)', strokeWidth: 0 }}
               connectNulls={false} activeDot={{ r: 5 }} />
-
-            {/* Kcal line */}
-            <Line yAxisId="kcal" type="monotone" dataKey="kcal"
-              stroke="var(--exercise)" strokeWidth={2} strokeDasharray="0"
-              dot={{ r: 3, fill: 'var(--exercise)', strokeWidth: 0 }}
-              connectNulls={false} activeDot={{ r: 5 }} />
           </ComposedChart>
         </ResponsiveContainer>
-
-        {/* Legend */}
-        <div style={{ display: 'flex', gap: 16, marginTop: 8, fontFamily: "'DM Mono', monospace", fontSize: 10, color: 'var(--muted)' }}>
-          <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-            <span style={{ width: 12, height: 2, background: 'var(--nutrition)', display: 'inline-block', borderRadius: 2 }} />
-            Weight (kg)
-          </span>
-          <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-            <span style={{ width: 12, height: 2, background: 'var(--exercise)', display: 'inline-block', borderRadius: 2 }} />
-            Kcal
-          </span>
-        </div>
 
         <div style={{ marginTop: 12, fontFamily: "'DM Mono', monospace", fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>
           Supplements (O3 + ZMB6 + Creatine) — {suppDays}/{days.length} days
@@ -620,7 +643,7 @@ export default function Dashboard({ allData }) {
           </BarChart>
         </ResponsiveContainer>
         <div style={{ marginTop: 12, fontFamily: "'DM Mono', monospace", fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>
-          Sauna 🧖
+          🧖 Sauna
         </div>
         <StreakDots
           days={days}
@@ -632,6 +655,16 @@ export default function Dashboard({ allData }) {
             return ''
           }}
         />
+
+        <div style={{ marginTop: 10, fontFamily: "'DM Mono', monospace", fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>
+          🧊 Cold shower / bath
+        </div>
+        <StreakDots days={days} getValue={key => {
+          const v = get(key).exercise.cold
+          if (v === true)  return 'yes'
+          if (v === false) return 'no'
+          return ''
+        }} />
       </ChartCard>
 
       {/* ── Formation ── */}
@@ -655,6 +688,16 @@ export default function Dashboard({ allData }) {
             <Bar dataKey="reading" stackId="a" fill="var(--formation)" fillOpacity={0.4} radius={[4,4,0,0]} name="Reading" />
           </BarChart>
         </ResponsiveContainer>
+
+        <div style={{ marginTop: 12, fontFamily: "'DM Mono', monospace", fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>
+          🙏 Gratitude practice
+        </div>
+        <StreakDots days={days} getValue={key => {
+          const v = get(key).formation.gratitude
+          if (v === true)  return 'yes'
+          if (v === false) return 'no'
+          return ''
+        }} />
       </ChartCard>
 
       {/* ── Vices ── */}

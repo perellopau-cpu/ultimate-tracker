@@ -1,6 +1,6 @@
 import { useT } from '../../contexts/LanguageContext'
 
-export default function NutritionLog({ val, onChange, lastWeight, lastKcal }) {
+export default function NutritionLog({ val, onChange, lastWeight }) {
   const { t } = useT()
 
   const ticks = [
@@ -23,15 +23,6 @@ export default function NutritionLog({ val, onChange, lastWeight, lastKcal }) {
             placeholder={lastWeight || '73.5'}
             value={val.weight}
             onChange={e => onChange({ ...val, weight: e.target.value })}
-          />
-        </div>
-        <div className="field">
-          <label>{t('nutrition.kcal')}</label>
-          <input
-            type="number"
-            placeholder={lastKcal || '2800'}
-            value={val.kcal}
-            onChange={e => onChange({ ...val, kcal: e.target.value })}
           />
         </div>
       </div>

@@ -33,7 +33,7 @@ const BLOCK_LABEL_KEY = {
   exercise: 'block.exercise', formation: 'block.formation', vices: 'block.vices',
 }
 
-function LogScreen({ block, dayData, date, isToday, userId, onBack, onSave, lastWeight, lastKcal }) {
+function LogScreen({ block, dayData, date, isToday, userId, onBack, onSave, lastWeight }) {
   const { t, lang } = useT()
   const b = BLOCKS.find(b => b.id === block)
   const val = dayData[block]
@@ -54,7 +54,7 @@ function LogScreen({ block, dayData, date, isToday, userId, onBack, onSave, last
       </div>
 
       {block === 'sleep'     && <SleepLog     val={val} onChange={v => onSave.update(block, v)} />}
-      {block === 'nutrition' && <NutritionLog  val={val} onChange={v => onSave.update(block, v)} lastWeight={lastWeight} lastKcal={lastKcal} />}
+      {block === 'nutrition' && <NutritionLog  val={val} onChange={v => onSave.update(block, v)} lastWeight={lastWeight} />}
       {block === 'exercise'  && <ExerciseLog   val={val} onChange={v => onSave.update(block, v)} />}
       {block === 'formation' && <FormationLog  val={val} onChange={v => onSave.update(block, v)} />}
       {block === 'vices'     && <VicesLog      val={val} onChange={v => onSave.update(block, v)} />}
@@ -112,16 +112,16 @@ export default function App() {
     fetchLogs()
   }, [session])
 
-  // ── Last known nutrition values (for placeholder pre-fill) ──────────
-  const { lastWeight, lastKcal } = useMemo(() => {
+  // ── Last known weight (for placeholder pre-fill) ─────────────────────
+  const lastWeight = useMemo(() => {
     const currentKey = fmtKey(selectedDate)
     const keys = Object.keys(allData).sort().reverse()
     for (const k of keys) {
       if (k === currentKey) continue
-      const nu = allData[k]?.nutrition
-      if (nu?.weight || nu?.kcal) return { lastWeight: nu.weight || '', lastKcal: nu.kcal || '' }
+      const w = allData[k]?.nutrition?.weight
+      if (w) return w
     }
-    return { lastWeight: '', lastKcal: '' }
+    return ''
   }, [allData, selectedDate])
 
   // ── Auto-save ─────────────────────────────────────────────────────
@@ -192,7 +192,6 @@ export default function App() {
           onBack={goHome}
           onSave={saveHandle}
           lastWeight={lastWeight}
-          lastKcal={lastKcal}
         />
       )}
 

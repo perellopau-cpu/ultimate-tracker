@@ -77,6 +77,18 @@ export default function ExerciseLog({ val, onChange }) {
           No sauna
         </button>
       </div>
+
+      <div className="section-label">{t('exercise.cold')}</div>
+      <div className="toggle-group">
+        <button
+          className={`toggle-btn ${val.cold === true ? 'active' : ''}`}
+          onClick={() => onChange({ ...val, cold: val.cold === true ? null : true })}
+        >{t('sleep.yes')}</button>
+        <button
+          className={`toggle-btn danger ${val.cold === false ? 'active' : ''}`}
+          onClick={() => onChange({ ...val, cold: val.cold === false ? null : false })}
+        >{t('sleep.no')}</button>
+      </div>
     </div>
   )
 }

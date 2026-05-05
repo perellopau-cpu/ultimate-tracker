@@ -92,6 +92,30 @@ export default function SleepLog({ val, onChange }) {
           onClick={() => onChange({ ...val, breathwork: val.breathwork === false ? null : false })}
         >{t('sleep.no')}</button>
       </div>
+
+      <div className="section-label">{t('sleep.nasalStrip')}</div>
+      <div className="toggle-group">
+        <button
+          className={`toggle-btn ${val.nasalStrip === true ? 'active' : ''}`}
+          onClick={() => onChange({ ...val, nasalStrip: val.nasalStrip === true ? null : true })}
+        >{t('sleep.yes')}</button>
+        <button
+          className={`toggle-btn danger ${val.nasalStrip === false ? 'active' : ''}`}
+          onClick={() => onChange({ ...val, nasalStrip: val.nasalStrip === false ? null : false })}
+        >{t('sleep.no')}</button>
+      </div>
+
+      <div className="section-label">{t('sleep.dentalFloss')}</div>
+      <div className="toggle-group">
+        <button
+          className={`toggle-btn ${val.dentalFloss === true ? 'active' : ''}`}
+          onClick={() => onChange({ ...val, dentalFloss: val.dentalFloss === true ? null : true })}
+        >{t('sleep.yes')}</button>
+        <button
+          className={`toggle-btn danger ${val.dentalFloss === false ? 'active' : ''}`}
+          onClick={() => onChange({ ...val, dentalFloss: val.dentalFloss === false ? null : false })}
+        >{t('sleep.no')}</button>
+      </div>
     </div>
   )
 }

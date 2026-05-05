@@ -60,6 +60,8 @@ const t = {
     'sleep.slow': 'Slow',
     'sleep.legsUp': '10 min legs up before bed',
     'sleep.breathwork': '4-7-8 breathwork',
+    'sleep.nasalStrip': 'Nasal strip',
+    'sleep.dentalFloss': 'Dental floss',
     'sleep.yes': 'Yes',
     'sleep.no': 'No',
 
@@ -89,11 +91,13 @@ const t = {
     'exercise.sauna': 'Sauna',
     'exercise.rounds': 'Rounds',
     'exercise.time': 'Time (min)',
+    'exercise.cold': 'Cold shower / bath',
 
     // Formation
     'formation.timeInvested': 'Time invested',
     'formation.study': 'Study (min)',
     'formation.reading': 'Reading (min)',
+    'formation.gratitude': 'Gratitude practice',
 
     // Vices
     'vices.cigarettes': 'Smoking',
@@ -194,6 +198,8 @@ const t = {
     'sleep.slow': 'Lento',
     'sleep.legsUp': '10 min piernas en alto antes de dormir',
     'sleep.breathwork': 'Respiración 4-7-8',
+    'sleep.nasalStrip': 'Tira nasal',
+    'sleep.dentalFloss': 'Hilo dental',
     'sleep.yes': 'Sí',
     'sleep.no': 'No',
 
@@ -223,11 +229,13 @@ const t = {
     'exercise.sauna': 'Sauna',
     'exercise.rounds': 'Rondas',
     'exercise.time': 'Tiempo (min)',
+    'exercise.cold': 'Ducha / baño frío',
 
     // Formation
     'formation.timeInvested': 'Tiempo invertido',
     'formation.study': 'Estudio (min)',
     'formation.reading': 'Lectura (min)',
+    'formation.gratitude': 'Práctica de gratitud',
 
     // Vices
     'vices.cigarettes': 'Fumado',
