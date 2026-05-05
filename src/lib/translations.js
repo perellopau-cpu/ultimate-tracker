@@ -54,6 +54,7 @@ const t = {
     // Save indicator
     'save.saving': '● Saving…',
     'save.saved': '✓ Saved',
+    'save.queued': '○ Saved offline — will sync',
     'save.error': '⚠ Save failed',
 
     // Date badge
@@ -202,6 +203,7 @@ const t = {
     // Save indicator
     'save.saving': '● Guardando…',
     'save.saved': '✓ Guardado',
+    'save.queued': '○ Guardado sin conexión — sincronizará',
     'save.error': '⚠ Error al guardar',
 
     // Date badge

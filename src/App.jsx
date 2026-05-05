@@ -3,6 +3,15 @@ import { supabase } from './lib/supabase'
 import { useTheme } from './hooks/useTheme'
 import { fmtKey, todayKey, emptyDay, BLOCKS, ordinalDate } from './lib/utils'
 import { useT } from './contexts/LanguageContext'
+
+// ── Offline helpers ───────────────────────────────────────────────────
+const CACHE_KEY = 'ut_offline_data'
+const QUEUE_KEY = 'ut_offline_queue'
+
+const loadCachedData  = ()    => { try { return JSON.parse(localStorage.getItem(CACHE_KEY) || '{}') } catch { return {} } }
+const saveCachedData  = (d)   => localStorage.setItem(CACHE_KEY, JSON.stringify(d))
+const loadQueue       = ()    => { try { return JSON.parse(localStorage.getItem(QUEUE_KEY) || '[]') } catch { return [] } }
+const saveQueue       = (q)   => localStorage.setItem(QUEUE_KEY, JSON.stringify(q))
 import Login from './screens/Login'
 import Home from './screens/Home'
 import Settings from './screens/Settings'
@@ -23,6 +32,7 @@ function SaveIndicator({ status }) {
     <div className={`save-indicator ${status === 'saved' ? 'saved' : ''}`}>
       {status === 'saving' && t('save.saving')}
       {status === 'saved'  && t('save.saved')}
+      {status === 'queued' && t('save.queued')}
       {status === 'error'  && t('save.error')}
     </div>
   )
@@ -91,10 +101,19 @@ export default function App() {
     if (!session) { setDataLoading(false); return }
     const fetchLogs = async () => {
       setDataLoading(true)
+
+      // Offline: serve from local cache immediately
+      if (!navigator.onLine) {
+        setAllData(loadCachedData())
+        setDataLoading(false)
+        return
+      }
+
       const { data, error } = await supabase
         .from('daily_logs')
         .select('date, sleep, nutrition, exercise, formation, vices')
         .eq('user_id', session.user.id)
+
       if (!error && data) {
         const map = {}
         data.forEach(row => {
@@ -107,6 +126,9 @@ export default function App() {
           }
         })
         setAllData(map)
+        saveCachedData(map)       // keep local cache fresh
+      } else {
+        setAllData(loadCachedData()) // network error → fall back to cache
       }
       setDataLoading(false)
     }
@@ -129,16 +151,24 @@ export default function App() {
   const updateBlock = useCallback((block, val) => {
     const dateKey = fmtKey(selectedDate)
 
-    // Optimistic update
-    setAllData(prev => ({
-      ...prev,
-      [dateKey]: { ...(prev[dateKey] || emptyDay()), [block]: val },
-    }))
+    // Optimistic update + always persist locally
+    setAllData(prev => {
+      const next = { ...prev, [dateKey]: { ...(prev[dateKey] || emptyDay()), [block]: val } }
+      saveCachedData(next)
+      return next
+    })
 
-    // Debounced Supabase upsert
+    // Debounced Supabase upsert (or queue if offline)
     clearTimeout(saveTimer.current)
     setSaveStatus('saving')
     saveTimer.current = setTimeout(async () => {
+      if (!navigator.onLine) {
+        // Deduplicate queue: keep only latest value per block+date
+        const q = loadQueue().filter(i => !(i.dateKey === dateKey && i.block === block))
+        saveQueue([...q, { dateKey, block, val }])
+        setSaveStatus('queued')
+        return
+      }
       const { error } = await supabase
         .from('daily_logs')
         .upsert(
@@ -149,6 +179,31 @@ export default function App() {
       if (!error) setTimeout(() => setSaveStatus('idle'), 2000)
     }, 500)
   }, [selectedDate, session])
+
+  // ── Flush offline queue when connection returns ────────────────────
+  useEffect(() => {
+    if (!session) return
+    const syncQueue = async () => {
+      const q = loadQueue()
+      if (!q.length) return
+      setSaveStatus('saving')
+      const failed = []
+      for (const item of q) {
+        const { error } = await supabase
+          .from('daily_logs')
+          .upsert(
+            { user_id: session.user.id, date: item.dateKey, [item.block]: item.val },
+            { onConflict: 'user_id,date' }
+          )
+        if (error) failed.push(item)
+      }
+      saveQueue(failed)
+      setSaveStatus(failed.length ? 'error' : 'saved')
+      if (!failed.length) setTimeout(() => setSaveStatus('idle'), 2000)
+    }
+    window.addEventListener('online', syncQueue)
+    return () => window.removeEventListener('online', syncQueue)
+  }, [session])
 
   // ── Loading / auth gates ──────────────────────────────────────────
   if (session === undefined || dataLoading) {
