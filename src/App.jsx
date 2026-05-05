@@ -261,7 +261,7 @@ export default function App() {
 
       {screen === 'challenges' && <Challenges />}
 
-      {screen !== 'settings' && (
+      {(
         <nav className="nav">
           <button
             className={`nav-btn ${screen === 'home' || screen === 'log' ? 'active' : ''}`}

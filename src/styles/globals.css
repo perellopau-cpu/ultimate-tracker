@@ -83,6 +83,14 @@ input, textarea, select {
   gap: 2px;
 }
 
+.nav-btn span:not(.label) {
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
 .nav-btn span.label {
   font-family: 'DM Mono', monospace;
   font-size: 9px;
@@ -180,9 +188,10 @@ input, textarea, select {
 .input-row {
   display: flex;
   gap: 10px;
+  width: 100%;
 }
 
-.field { flex: 1; }
+.field { flex: 1; min-width: 0; }
 
 .field label {
   display: block;

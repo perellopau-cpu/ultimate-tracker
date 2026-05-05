@@ -36,10 +36,8 @@ export default function Settings({ theme, onToggleTheme, onBack }) {
 
   return (
     <div className="screen">
-      <div className="log-header">
-        <button className="back-btn" onClick={onBack}>‹</button>
-        <div className="log-title">{t('settings.title')}</div>
-      </div>
+      <p className="page-title">{t('settings.title')}</p>
+      <p className="page-sub">{t('settings.sub')}</p>
 
       {/* Appearance */}
       <div style={s.section}>

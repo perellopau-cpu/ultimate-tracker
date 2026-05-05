@@ -38,6 +38,7 @@ const t = {
     'home.pastDay': 'Past day',
     'home.complete': '✓ Complete',
     'home.filled': 'filled',
+    'home.sub': 'DAILY LOG',
 
     // Calendar
     'cal.close': 'Close',
@@ -126,6 +127,7 @@ const t = {
 
     // Settings
     'settings.title': 'Settings',
+    'settings.sub': 'PREFERENCES',
     'settings.appearance': 'Appearance',
     'settings.darkMode': 'Dark mode',
     'settings.language': 'Language',
@@ -187,6 +189,7 @@ const t = {
     'home.pastDay': 'Día pasado',
     'home.complete': '✓ Completo',
     'home.filled': 'completado',
+    'home.sub': 'REGISTRO DIARIO',
 
     // Calendar
     'cal.close': 'Cerrar',
@@ -275,6 +278,7 @@ const t = {
 
     // Settings
     'settings.title': 'Ajustes',
+    'settings.sub': 'PREFERENCIAS',
     'settings.appearance': 'Apariencia',
     'settings.darkMode': 'Modo oscuro',
     'settings.language': 'Idioma',

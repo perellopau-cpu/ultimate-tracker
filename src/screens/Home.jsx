@@ -28,9 +28,10 @@ export default function Home({ selectedDate, onSelectDate, dayData, loggedDates,
   return (
     <div className="screen">
       <div style={styles.topBar}>
-        <p style={styles.dateText}>
-          {isToday ? ordinalDate(today, lang) : dateLabel}
-        </p>
+        <div>
+          <p className="page-title">{isToday ? ordinalDate(today, lang) : dateLabel}</p>
+          <p className="page-sub">{t('home.sub')}</p>
+        </div>
         <button style={styles.calBtn} onClick={() => setShowCalendar(true)} aria-label="Open calendar">
           📅
         </button>
@@ -79,15 +80,9 @@ export default function Home({ selectedDate, onSelectDate, dayData, loggedDates,
 const styles = {
   topBar: {
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'space-between',
-    marginBottom: 24,
-  },
-  dateText: {
-    fontFamily: "'DM Serif Display', serif",
-    fontSize: 20,
-    color: 'var(--text)',
-    lineHeight: 1.2,
+    marginBottom: 20,
   },
   calBtn: {
     background: 'var(--surface2)',
