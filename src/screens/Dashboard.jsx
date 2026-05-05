@@ -486,9 +486,9 @@ export default function Dashboard({ allData }) {
       <PeriodNav days={days} offset={offset} onPrev={() => setOffset(o => o + 1)} onNext={() => setOffset(o => Math.max(0, o - 1))} />
 
       <StatRow stats={[
-        { label: 'Avg Sleep', value: avgSleepLbl,                          color: 'var(--sleep)'     },
-        { label: 'Sessions',  value: trainingDays,                         color: 'var(--exercise)'  },
-        { label: 'Study',     value: `${Math.floor(totalStudy / 60)}h`,    color: 'var(--formation)' },
+        { label: 'Avg Sleep', value: avgSleepLbl,                                         color: 'var(--sleep)'     },
+        { label: 'Sessions',  value: trainingDays,                                        color: 'var(--exercise)'  },
+        { label: 'Formation', value: `${Math.floor((totalStudy + totalReading) / 60)}h`, color: 'var(--formation)' },
       ]} />
 
       {/* ── Sleep: floating bar (bedtime → wake time) ── */}

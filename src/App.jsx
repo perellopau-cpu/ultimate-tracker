@@ -12,6 +12,7 @@ import ExerciseLog from './screens/blocks/ExerciseLog'
 import FormationLog from './screens/blocks/FormationLog'
 import VicesLog from './screens/blocks/VicesLog'
 import Dashboard from './screens/Dashboard'
+import Challenges from './screens/Challenges'
 import './styles/globals.css'
 
 // ── Save indicator ────────────────────────────────────────────────────
@@ -203,6 +204,8 @@ export default function App() {
         <Settings theme={theme} onToggleTheme={toggleTheme} onBack={goHome} />
       )}
 
+      {screen === 'challenges' && <Challenges />}
+
       {screen !== 'settings' && (
         <nav className="nav">
           <button
@@ -216,6 +219,12 @@ export default function App() {
             onClick={() => setScreen('dashboard')}
           >
             <span>◈</span><span className="label">{t('nav.stats')}</span>
+          </button>
+          <button
+            className={`nav-btn ${screen === 'challenges' ? 'active' : ''}`}
+            onClick={() => setScreen('challenges')}
+          >
+            <span>🎯</span><span className="label">{t('nav.challenges')}</span>
           </button>
           <button className="nav-btn" onClick={() => setScreen('settings')}>
             <span>⚙</span><span className="label">{t('nav.settings')}</span>

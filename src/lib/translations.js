@@ -3,7 +3,17 @@ const t = {
     // Nav
     'nav.log': 'Log',
     'nav.stats': 'Stats',
+    'nav.challenges': 'Goals',
     'nav.settings': 'Settings',
+
+    // Challenges
+    'challenges.title': 'Challenges',
+    'challenges.sub': 'YOUR GOALS',
+    'challenges.placeholder': 'Write a challenge…',
+    'challenges.add': 'Add',
+    'challenges.empty': 'No challenges yet. Add one above!',
+    'challenges.active': 'Active',
+    'challenges.done': 'Completed',
 
     // Loading / auth
     'app.loading': 'Loading…',
@@ -141,7 +151,17 @@ const t = {
     // Nav
     'nav.log': 'Registro',
     'nav.stats': 'Estadísticas',
+    'nav.challenges': 'Retos',
     'nav.settings': 'Ajustes',
+
+    // Challenges
+    'challenges.title': 'Retos',
+    'challenges.sub': 'TUS METAS',
+    'challenges.placeholder': 'Escribe un reto…',
+    'challenges.add': 'Añadir',
+    'challenges.empty': 'Sin retos aún. ¡Añade uno arriba!',
+    'challenges.active': 'Activos',
+    'challenges.done': 'Completados',
 
     // Loading / auth
     'app.loading': 'Cargando…',
