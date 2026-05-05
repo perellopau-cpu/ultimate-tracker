@@ -53,7 +53,7 @@ input, textarea, select {
 /* ── Bottom nav ────────────────────────────────────────────────────── */
 .nav {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-evenly;
   align-items: center;
   padding: 10px 0 20px;
   background: var(--surface);
@@ -72,8 +72,9 @@ input, textarea, select {
   background: none;
   border: none;
   color: var(--muted);
-  font-size: 22px;
-  padding: 4px 20px;
+  font-size: 20px;
+  padding: 4px 0;
+  flex: 1;
   border-radius: 8px;
   transition: color .2s;
   display: flex;

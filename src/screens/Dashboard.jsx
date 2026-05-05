@@ -586,6 +586,16 @@ export default function Dashboard({ allData }) {
           if (v === false) return 'no'
           return ''
         }} />
+
+        <div style={{ marginTop: 10, fontFamily: "'DM Mono', monospace", fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>
+          🙏 Gratitude practice
+        </div>
+        <StreakDots days={days} getValue={key => {
+          const v = get(key).sleep.gratitude
+          if (v === true)  return 'yes'
+          if (v === false) return 'no'
+          return ''
+        }} />
       </ChartCard>
 
       {/* ── Nutrition: weight line ── */}
@@ -699,15 +709,6 @@ export default function Dashboard({ allData }) {
           </BarChart>
         </ResponsiveContainer>
 
-        <div style={{ marginTop: 12, fontFamily: "'DM Mono', monospace", fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>
-          🙏 Gratitude practice
-        </div>
-        <StreakDots days={days} getValue={key => {
-          const v = get(key).formation.gratitude
-          if (v === true)  return 'yes'
-          if (v === false) return 'no'
-          return ''
-        }} />
       </ChartCard>
 
       {/* ── Vices ── */}

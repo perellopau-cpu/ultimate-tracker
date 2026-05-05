@@ -20,10 +20,10 @@ export const calcHoursSlept = (bedtime, waketime) => {
 }
 
 export const emptyDay = () => ({
-  sleep:     { bedtime: '', waketime: '', phone30: null, wakeUpSpeed: null, legsUp: null, breathwork: null, nasalStrip: null, dentalFloss: null },
+  sleep:     { bedtime: '', waketime: '', phone30: null, wakeUpSpeed: null, legsUp: null, breathwork: null, nasalStrip: null, dentalFloss: null, gratitude: null },
   nutrition: { weight: '', kcal: '', o3: false, zmb6: false, creatine: false, fruitveg1: false, fruitveg2: false },
   exercise:  { type: '', km: '', pace: '', saunaRounds: '', cold: null },
-  formation: { study: '', reading: '', gratitude: null },
+  formation: { study: '', reading: '' },
   vices:     { smokeType: null, cigaretteCount: '', cigarettes: '', alcoholCount: '', alcoholType: '', socialMediaUnder30: null },
 })
 
@@ -40,8 +40,9 @@ export const completionOf = (block, data) => {
              + (d.legsUp !== null && d.legsUp !== undefined ? 1 : 0)
              + (d.breathwork !== null && d.breathwork !== undefined ? 1 : 0)
              + (d.nasalStrip !== null && d.nasalStrip !== undefined ? 1 : 0)
-             + (d.dentalFloss !== null && d.dentalFloss !== undefined ? 1 : 0),
-        total: 8,
+             + (d.dentalFloss !== null && d.dentalFloss !== undefined ? 1 : 0)
+             + (d.gratitude !== null && d.gratitude !== undefined ? 1 : 0),
+        total: 9,
       }
     }
     case 'nutrition': {
@@ -62,8 +63,8 @@ export const completionOf = (block, data) => {
     case 'formation': {
       const d = data.formation
       return {
-        done: (d.study ? 1 : 0) + (d.reading ? 1 : 0) + (d.gratitude !== null && d.gratitude !== undefined ? 1 : 0),
-        total: 3,
+        done: (d.study ? 1 : 0) + (d.reading ? 1 : 0),
+        total: 2,
       }
     }
     case 'vices': {

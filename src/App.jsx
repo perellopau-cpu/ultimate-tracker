@@ -282,7 +282,7 @@ export default function App() {
             <span>◎</span><span className="label">{t('nav.challenges')}</span>
           </button>
           <button className="nav-btn" onClick={() => setScreen('settings')}>
-            <span>⚙</span><span className="label">{t('nav.settings')}</span>
+            <span>⊙</span><span className="label">{t('nav.settings')}</span>
           </button>
         </nav>
       )}
