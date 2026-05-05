@@ -488,7 +488,7 @@ export default function Dashboard({ allData }) {
       <StatRow stats={[
         { label: 'Avg Sleep', value: avgSleepLbl,                                         color: 'var(--sleep)'     },
         { label: 'Sessions',  value: trainingDays,                                        color: 'var(--exercise)'  },
-        { label: 'Formation', value: `${Math.floor((totalStudy + totalReading) / 60)}h`, color: 'var(--formation)' },
+        { label: 'Formation', value: fmtHours(totalStudy + totalReading),                color: 'var(--formation)' },
       ]} />
 
       {/* ── Sleep: floating bar (bedtime → wake time) ── */}
