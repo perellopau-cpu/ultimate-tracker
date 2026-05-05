@@ -51,6 +51,14 @@ function fmtHours(minutes) {
   return `${h}h ${m}m`
 }
 
+// Format decimal hours as H:MM  (e.g. 4.25 → "4:15", 0.5 → "0:30")
+function fmtDecHours(dec) {
+  if (dec == null) return ''
+  const h = Math.floor(dec)
+  const m = Math.round((dec - h) * 60)
+  return `${h}:${String(m).padStart(2, '0')}`
+}
+
 function periodRangeLabel(days) {
   if (!days.length) return ''
   const fmt = d => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
@@ -244,12 +252,13 @@ function DrumPicker({ items, value, onChange, width = 52 }) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // Sync scroll when value changes externally
+  // Sync scroll when value changes externally — use instant jump (no animation)
+  // to avoid onScroll firing mid-animation and saving to the wrong week key
   useEffect(() => {
     if (settling.current) return
     const el  = ref.current
     const idx = items.indexOf(value)
-    if (el && idx >= 0) el.scrollTo({ top: idx * DRUM_H, behavior: 'smooth' })
+    if (el && idx >= 0) el.scrollTop = idx * DRUM_H
   }, [value, items])
 
   // Non-passive wheel handler for desktop
@@ -297,6 +306,7 @@ function DrumPicker({ items, value, onChange, width = 52 }) {
         <div
           ref={ref}
           onScroll={onScroll}
+          className="drum-scroll"
           style={{
             position: 'relative', height: DRUM_H, overflowY: 'scroll',
             scrollSnapType: 'y mandatory', scrollbarWidth: 'none', msOverflowStyle: 'none',
@@ -771,7 +781,7 @@ export default function Dashboard({ allData }) {
             <LineChart data={phoneChartData} margin={{ top: 8, right: 4, left: -28, bottom: 0 }}>
               <XAxis dataKey="week" tick={axisTick} tickLine={false} axisLine={false} />
               <YAxis tick={axisTick} tickLine={false} axisLine={false} domain={['auto', 'auto']}
-                tickFormatter={v => `${v}h`} />
+                tickFormatter={v => fmtDecHours(v)} />
               <Tooltip content={({ active, payload }) => {
                 if (!active || !payload?.length) return null
                 const d = payload[0]?.payload
@@ -779,7 +789,7 @@ export default function Dashboard({ allData }) {
                   <div style={TT}>
                     <div style={{ color: 'var(--muted)', fontSize: 10, marginBottom: 2 }}>{d.week}</div>
                     <div style={{ color: '#60a5fa', fontWeight: 700 }}>
-                      {d.raw || `${d.hrs}h`}
+                      {d.hrs != null ? fmtDecHours(d.hrs) : '—'}
                     </div>
                   </div>
                 )

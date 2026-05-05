@@ -8,6 +8,9 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Hide scrollbar inside drum roll pickers on all browsers */
+.drum-scroll::-webkit-scrollbar { display: none; }
+
 html, body, #root {
   height: 100%;
 }
