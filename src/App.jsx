@@ -224,7 +224,7 @@ export default function App() {
             className={`nav-btn ${screen === 'challenges' ? 'active' : ''}`}
             onClick={() => setScreen('challenges')}
           >
-            <span>🎯</span><span className="label">{t('nav.challenges')}</span>
+            <span>◎</span><span className="label">{t('nav.challenges')}</span>
           </button>
           <button className="nav-btn" onClick={() => setScreen('settings')}>
             <span>⚙</span><span className="label">{t('nav.settings')}</span>
