@@ -1,6 +1,47 @@
 import { calcHoursSlept } from '../../lib/utils'
 import { useT } from '../../contexts/LanguageContext'
 
+// Styled box that looks like calc-result but acts as a time input on tap
+function TimeInput({ label, value, onChange }) {
+  return (
+    <div style={{ marginBottom: 10 }}>
+      <label style={{ display: 'block', fontSize: 12, color: 'var(--muted)', marginBottom: 6, fontFamily: "'DM Mono', monospace" }}>
+        {label}
+      </label>
+      <div style={{ position: 'relative', width: '100%' }}>
+        <div style={{
+          padding: '9px 14px',
+          background: 'var(--surface2)',
+          border: '1px solid var(--border)',
+          borderRadius: 'var(--radius-sm)',
+          fontSize: 15,
+          color: value ? 'var(--text)' : 'var(--muted)',
+          fontFamily: "'DM Sans', sans-serif",
+          pointerEvents: 'none',
+          userSelect: 'none',
+        }}>
+          {value || '––:––'}
+        </div>
+        <input
+          type="time"
+          value={value}
+          onChange={onChange}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            opacity: 0,
+            width: '100%',
+            height: '100%',
+            cursor: 'pointer',
+            border: 'none',
+            background: 'none',
+          }}
+        />
+      </div>
+    </div>
+  )
+}
+
 export default function SleepLog({ val, onChange }) {
   const { t } = useT()
   const hours = calcHoursSlept(val.bedtime, val.waketime)
@@ -8,27 +49,20 @@ export default function SleepLog({ val, onChange }) {
   return (
     <div>
       <div className="section-label">{t('sleep.times')}</div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
-        <div className="field">
-          <label>{t('sleep.bedtime')}</label>
-          <input
-            type="time"
-            value={val.bedtime}
-            onChange={e => onChange({ ...val, bedtime: e.target.value })}
-          />
-        </div>
-        <div className="field">
-          <label>{t('sleep.waketime')}</label>
-          <input
-            type="time"
-            value={val.waketime}
-            onChange={e => onChange({ ...val, waketime: e.target.value })}
-          />
-        </div>
-      </div>
+
+      <TimeInput
+        label={t('sleep.bedtime')}
+        value={val.bedtime}
+        onChange={e => onChange({ ...val, bedtime: e.target.value })}
+      />
+      <TimeInput
+        label={t('sleep.waketime')}
+        value={val.waketime}
+        onChange={e => onChange({ ...val, waketime: e.target.value })}
+      />
 
       {hours && (
-        <div className="field" style={{ marginTop: 10 }}>
+        <div className="field">
           <label>{t('sleep.hoursSlept')}</label>
           <div className="calc-result">{hours.label} ✦</div>
         </div>
