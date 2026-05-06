@@ -191,7 +191,7 @@ input, textarea, select {
   width: 100%;
 }
 
-.field { flex: 1; min-width: 0; }
+.field { flex: 1; min-width: 0; overflow: hidden; }
 
 .field label {
   display: block;
@@ -217,7 +217,13 @@ input, textarea, select {
 }
 
 .field input:focus { border-color: var(--accent); }
-.field input[type=time] { color-scheme: light; }
+.field input[type=time] {
+  color-scheme: light;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  display: block !important;
+}
 [data-theme="dark"] .field input[type=time] { color-scheme: dark; }
 .field input::placeholder { color: var(--muted); opacity: .6; }
 
