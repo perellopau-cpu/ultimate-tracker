@@ -4,6 +4,7 @@ import {
   XAxis, YAxis, Tooltip, ReferenceLine,
   ResponsiveContainer, Cell, Legend,
 } from 'recharts'
+import { supabase } from '../lib/supabase'
 import { useT } from '../contexts/LanguageContext'
 import { fmtKey, calcHoursSlept, emptyDay } from '../lib/utils'
 
@@ -334,11 +335,16 @@ const HOURS_ITEMS   = Array.from({ length: 13 }, (_, i) => String(i))
 const MINUTES_ITEMS = Array.from({ length: 60 }, (_, i) => String(i).padStart(2, '0'))
 
 // ── Main Dashboard ────────────────────────────────────────────────────
-export default function Dashboard({ allData }) {
+export default function Dashboard({ allData, session }) {
   const { t } = useT()
+  const userId = session?.user?.id
   const [period, setPeriod] = useState('7d')
   const [offset, setOffset] = useState(0)
-  const [screenTime, setScreenTime] = useState(() => localStorage.getItem(`ut_screen_${getWeekKey(new Date())}`) || '')
+
+  // screenTimeMap: { [weekKey]: valueString }
+  const [screenTimeMap, setScreenTimeMap] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('ut_screen_map') || '{}') } catch { return {} }
+  })
 
   const changePeriod = (p) => { setPeriod(p); setOffset(0) }
 
@@ -347,14 +353,38 @@ export default function Dashboard({ allData }) {
 
   // Key for the week currently visible in the 7D view (Monday of that week)
   const viewedWeekKey = period === '7d' ? fmtKey(days[0].date) : getWeekKey(new Date())
-  const saveScreenTime = (val) => localStorage.setItem(`ut_screen_${viewedWeekKey}`, val)
+  const screenTime = screenTimeMap[viewedWeekKey] || ''
 
-  // Sync input whenever the viewed week changes
+  // Load all screen time from Supabase on mount
   useEffect(() => {
-    setScreenTime(localStorage.getItem(`ut_screen_${viewedWeekKey}`) || '')
-  }, [viewedWeekKey])
+    if (!userId || !navigator.onLine) return
+    supabase
+      .from('screen_time')
+      .select('week_key, value')
+      .eq('user_id', userId)
+      .then(({ data, error }) => {
+        if (!error && data) {
+          const map = {}
+          data.forEach(r => { map[r.week_key] = r.value })
+          setScreenTimeMap(map)
+          localStorage.setItem('ut_screen_map', JSON.stringify(map))
+        }
+      })
+  }, [userId])
 
-  // Build phone screen time chart from all stored weekly entries
+  const saveScreenTime = async (val) => {
+    const next = { ...screenTimeMap, [viewedWeekKey]: val }
+    setScreenTimeMap(next)
+    localStorage.setItem('ut_screen_map', JSON.stringify(next))
+    if (userId && navigator.onLine) {
+      await supabase.from('screen_time').upsert(
+        { user_id: userId, week_key: viewedWeekKey, value: val },
+        { onConflict: 'user_id,week_key' }
+      )
+    }
+  }
+
+  // Build phone screen time chart from map
   const phoneChartData = useMemo(() => {
     const weeksToShow = { '7d': 7, '28d': 4, '3m': 13, '1y': 52 }[period]
     const result = []
@@ -362,13 +392,13 @@ export default function Dashboard({ allData }) {
       const d = new Date()
       d.setDate(d.getDate() - w * 7)
       const key  = getWeekKey(d)
-      const raw  = localStorage.getItem(`ut_screen_${key}`) || ''
+      const raw  = screenTimeMap[key] || ''
       const hrs  = parseScreenTime(raw)
       const label = new Date(key).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
       result.push({ week: label, hrs, raw })
     }
     return result
-  }, [period, screenTime])
+  }, [period, screenTimeMap])
   const step = labelStep(period)
   const get  = (key) => allData[key] || emptyDay()
 
@@ -761,7 +791,7 @@ export default function Dashboard({ allData }) {
           const update = (h, m) => {
             const h2 = parseInt(h), m2 = parseInt(m)
             const str = h2 === 0 && m2 === 0 ? '' : m2 === 0 ? `${h2}h` : h2 === 0 ? `${m2}m` : `${h2}h ${m2}m`
-            setScreenTime(str); saveScreenTime(str)
+            saveScreenTime(str)
           }
           return (
             <div style={{ marginTop: 14, marginBottom: 4 }}>

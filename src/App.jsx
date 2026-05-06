@@ -252,7 +252,7 @@ export default function App() {
       )}
 
       {screen === 'dashboard' && (
-        <Dashboard allData={allData} />
+        <Dashboard allData={allData} session={session} />
       )}
 
       {screen === 'settings' && (
