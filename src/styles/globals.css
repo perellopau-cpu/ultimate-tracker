@@ -203,6 +203,9 @@ input, textarea, select {
 
 .field input {
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   background: var(--surface2);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);

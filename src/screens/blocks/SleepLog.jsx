@@ -8,7 +8,7 @@ export default function SleepLog({ val, onChange }) {
   return (
     <div>
       <div className="section-label">{t('sleep.times')}</div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
         <div className="field">
           <label>{t('sleep.bedtime')}</label>
           <input
