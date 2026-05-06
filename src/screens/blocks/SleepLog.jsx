@@ -28,11 +28,9 @@ export default function SleepLog({ val, onChange }) {
       </div>
 
       {hours && (
-        <div style={{ marginTop: 10 }}>
-          <div className="field">
-            <label>{t('sleep.hoursSlept')}</label>
-            <div className="calc-result">{hours.label} ✦</div>
-          </div>
+        <div className="field" style={{ marginTop: 10 }}>
+          <label>{t('sleep.hoursSlept')}</label>
+          <div className="calc-result">{hours.label} ✦</div>
         </div>
       )}
 

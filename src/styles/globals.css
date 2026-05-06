@@ -46,6 +46,7 @@ input, textarea, select {
 .screen {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 24px 20px 96px;
   /* 96px = bottom nav height */
 }
@@ -191,7 +192,7 @@ input, textarea, select {
   width: 100%;
 }
 
-.field { flex: 1; min-width: 0; overflow: hidden; }
+.field { flex: 1; min-width: 0; }
 
 .field label {
   display: block;
@@ -203,13 +204,10 @@ input, textarea, select {
 
 .field input {
   width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  box-sizing: border-box;
   background: var(--surface2);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  padding: 11px 14px;
+  padding: 9px 14px;
   color: var(--text);
   font-size: 15px;
   outline: none;
@@ -217,13 +215,7 @@ input, textarea, select {
 }
 
 .field input:focus { border-color: var(--accent); }
-.field input[type=time] {
-  color-scheme: light;
-  width: 100% !important;
-  max-width: 100% !important;
-  min-width: 0 !important;
-  display: block !important;
-}
+.field input[type=time] { color-scheme: light; }
 [data-theme="dark"] .field input[type=time] { color-scheme: dark; }
 .field input::placeholder { color: var(--muted); opacity: .6; }
 
@@ -231,7 +223,7 @@ input, textarea, select {
   background: var(--accent-bg);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  padding: 11px 14px;
+  padding: 9px 14px;
   font-family: 'DM Mono', monospace;
   font-size: 15px;
   color: var(--accent);
