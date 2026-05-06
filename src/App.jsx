@@ -259,7 +259,7 @@ export default function App() {
         <Settings theme={theme} onToggleTheme={toggleTheme} onBack={goHome} />
       )}
 
-      {screen === 'challenges' && <Challenges />}
+      {screen === 'challenges' && <Challenges session={session} />}
 
       {(
         <nav className="nav">

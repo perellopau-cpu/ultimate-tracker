@@ -1,65 +1,110 @@
 import { useState, useEffect } from 'react'
+import { supabase } from '../lib/supabase'
 import { useT } from '../contexts/LanguageContext'
 
 const FIRST_YEAR = 2024
 const currentYear = () => new Date().getFullYear()
 
-function storageKey(year) {
-  return `ut_challenges_${year}`
+// ── localStorage cache helpers ────────────────────────────────────────
+function cacheKey(userId, year) { return `ut_challenges_${userId}_${year}` }
+function loadCache(userId, year) {
+  try { return JSON.parse(localStorage.getItem(cacheKey(userId, year)) || '[]') } catch { return [] }
+}
+function saveCache(userId, year, list) {
+  localStorage.setItem(cacheKey(userId, year), JSON.stringify(list))
 }
 
-function loadYear(year) {
-  try {
-    // Migrate old key (no year) into current year on first load
-    if (year === currentYear()) {
-      const legacy = localStorage.getItem('ut_challenges')
-      if (legacy) {
-        const parsed = JSON.parse(legacy)
-        if (parsed.length > 0 && !localStorage.getItem(storageKey(year))) {
-          localStorage.setItem(storageKey(year), legacy)
-        }
-        localStorage.removeItem('ut_challenges')
-      }
-    }
-    return JSON.parse(localStorage.getItem(storageKey(year)) || '[]')
-  } catch {
-    return []
-  }
-}
-
-function saveYear(year, list) {
-  localStorage.setItem(storageKey(year), JSON.stringify(list))
-}
-
-export default function Challenges() {
+export default function Challenges({ session }) {
   const { t } = useT()
-  const [year, setYear]   = useState(currentYear)
-  const [items, setItems] = useState(() => loadYear(currentYear()))
-  const [input, setInput] = useState('')
+  const userId = session?.user?.id
+  const [year, setYear]     = useState(currentYear)
+  const [items, setItems]   = useState([])
+  const [input, setInput]   = useState('')
+  const [loading, setLoading] = useState(true)
 
-  // Reload items when year changes
-  useEffect(() => { setItems(loadYear(year)) }, [year])
+  // ── Load challenges for selected year ───────────────────────────────
+  useEffect(() => {
+    if (!userId) return
+    setLoading(true)
 
-  // Persist on every change
-  useEffect(() => { saveYear(year, items) }, [year, items])
+    // Serve cache immediately so UI doesn't flash empty
+    setItems(loadCache(userId, year))
 
-  const add = () => {
+    if (!navigator.onLine) {
+      setLoading(false)
+      return
+    }
+
+    supabase
+      .from('challenges')
+      .select('id, text, done, created_at')
+      .eq('user_id', userId)
+      .eq('year', year)
+      .order('created_at', { ascending: false })
+      .then(({ data, error }) => {
+        if (!error && data) {
+          const list = data.map(r => ({ id: r.id, text: r.text, done: r.done, createdAt: r.created_at }))
+          setItems(list)
+          saveCache(userId, year, list)
+        }
+        setLoading(false)
+      })
+  }, [userId, year])
+
+  // ── Add ──────────────────────────────────────────────────────────────
+  const add = async () => {
     const text = input.trim()
-    if (!text) return
-    setItems(prev => [
-      { id: Date.now().toString(), text, done: false, createdAt: new Date().toISOString() },
-      ...prev,
-    ])
+    if (!text || !userId) return
+    const id = Date.now().toString()
+    const newItem = { id, text, done: false, createdAt: new Date().toISOString() }
+
+    // Optimistic update
+    setItems(prev => {
+      const next = [newItem, ...prev]
+      saveCache(userId, year, next)
+      return next
+    })
     setInput('')
+
+    if (navigator.onLine) {
+      await supabase.from('challenges').insert({
+        id, user_id: userId, year, text, done: false, created_at: newItem.createdAt,
+      })
+    }
   }
 
-  const toggle = (id) =>
-    setItems(prev => prev.map(c => c.id === id ? { ...c, done: !c.done } : c))
+  // ── Toggle ───────────────────────────────────────────────────────────
+  const toggle = async (id) => {
+    let newDone
+    setItems(prev => {
+      const next = prev.map(c => {
+        if (c.id !== id) return c
+        newDone = !c.done
+        return { ...c, done: newDone }
+      })
+      saveCache(userId, year, next)
+      return next
+    })
 
-  const remove = (id) =>
-    setItems(prev => prev.filter(c => c.id !== id))
+    if (navigator.onLine) {
+      await supabase.from('challenges').update({ done: newDone }).eq('id', id).eq('user_id', userId)
+    }
+  }
 
-  const maxYear  = currentYear()
+  // ── Delete ───────────────────────────────────────────────────────────
+  const remove = async (id) => {
+    setItems(prev => {
+      const next = prev.filter(c => c.id !== id)
+      saveCache(userId, year, next)
+      return next
+    })
+
+    if (navigator.onLine) {
+      await supabase.from('challenges').delete().eq('id', id).eq('user_id', userId)
+    }
+  }
+
+  const maxYear   = currentYear()
   const active    = items.filter(c => !c.done)
   const completed = items.filter(c =>  c.done)
 
@@ -129,8 +174,8 @@ export default function Challenges() {
         </button>
       </div>
 
-      {/* ── Empty state ── */}
-      {items.length === 0 && (
+      {/* ── Empty / loading state ── */}
+      {!loading && items.length === 0 && (
         <div className="empty-state">
           <div className="es-icon">◎</div>
           <p>{t('challenges.empty')} {year}</p>
