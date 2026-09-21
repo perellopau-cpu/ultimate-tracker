@@ -10,6 +10,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [confirmed, setConfirmed] = useState(false)
+  const [resetSent, setResetSent] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -32,6 +33,19 @@ export default function Login() {
     setMode(m => m === 'signin' ? 'signup' : 'signin')
     setError('')
     setConfirmed(false)
+    setResetSent(false)
+  }
+
+  const handleForgotPassword = async () => {
+    if (!email) { setError('Enter your email above first.'); return }
+    setError('')
+    setLoading(true)
+    const { error: err } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin,
+    })
+    setLoading(false)
+    if (err) setError(err.message)
+    else setResetSent(true)
   }
 
   return (
@@ -74,12 +88,19 @@ export default function Login() {
             </div>
 
             {error && <p style={styles.errorMsg}>{error}</p>}
+            {resetSent && <p style={styles.successMsg}>Reset link sent — check your email.</p>}
 
             <button type="submit" style={styles.btn} disabled={loading}>
               {loading
                 ? (mode === 'signin' ? t('login.signingIn') : t('login.creatingAccount'))
                 : (mode === 'signin' ? t('login.signIn') : t('login.signUp'))}
             </button>
+
+            {mode === 'signin' && (
+              <button type="button" style={styles.forgotBtn} onClick={handleForgotPassword} disabled={loading}>
+                Forgot password?
+              </button>
+            )}
           </form>
         )}
 
@@ -181,5 +202,17 @@ const styles = {
     fontFamily: "'DM Mono', monospace",
     letterSpacing: '.02em',
     textDecoration: 'underline',
+  },
+  forgotBtn: {
+    marginTop: 10,
+    background: 'none',
+    border: 'none',
+    color: 'var(--muted)',
+    fontSize: 12,
+    cursor: 'pointer',
+    width: '100%',
+    textAlign: 'center',
+    fontFamily: "'DM Mono', monospace",
+    letterSpacing: '.02em',
   },
 }
