@@ -598,30 +598,10 @@ export default function Dashboard({ allData, session }) {
         }} />
 
         <div style={{ marginTop: 10, fontFamily: "'DM Mono', monospace", fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>
-          👃 Nasal strip
-        </div>
-        <StreakDots days={days} getValue={key => {
-          const v = get(key).sleep.nasalStrip
-          if (v === true)  return 'yes'
-          if (v === false) return 'no'
-          return ''
-        }} />
-
-        <div style={{ marginTop: 10, fontFamily: "'DM Mono', monospace", fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>
           🦷 Dental floss
         </div>
         <StreakDots days={days} getValue={key => {
           const v = get(key).sleep.dentalFloss
-          if (v === true)  return 'yes'
-          if (v === false) return 'no'
-          return ''
-        }} />
-
-        <div style={{ marginTop: 10, fontFamily: "'DM Mono', monospace", fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>
-          🙏 Gratitude practice
-        </div>
-        <StreakDots days={days} getValue={key => {
-          const v = get(key).sleep.gratitude
           if (v === true)  return 'yes'
           if (v === false) return 'no'
           return ''
@@ -715,6 +695,17 @@ export default function Dashboard({ allData, session }) {
           if (v === false) return 'no'
           return ''
         }} />
+
+        <div style={{ marginTop: 10, fontFamily: "'DM Mono', monospace", fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>
+          🧘 Meditation
+        </div>
+        <StreakDots days={days} getValue={key => {
+          const v = get(key).exercise.meditation
+          if (v === '10') return 'yes'
+          if (v === '5')  return 'yes'
+          if (v === '0')  return 'no'
+          return ''
+        }} />
       </ChartCard>
 
       {/* ── Formation ── */}
@@ -780,6 +771,16 @@ export default function Dashboard({ allData, session }) {
           Social media &lt;30 min
         </div>
         <StreakDots days={days} getValue={socialStreak} />
+
+        <div style={{ marginTop: 10, fontFamily: "'DM Mono', monospace", fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>
+          NF
+        </div>
+        <StreakDots days={days} getValue={key => {
+          const v = get(key).vices.nf
+          if (v === true)  return 'yes'
+          if (v === false) return 'no'
+          return ''
+        }} />
 
         {/* ── Weekly avg screen time ── */}
         {(() => {

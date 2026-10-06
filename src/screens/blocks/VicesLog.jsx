@@ -208,6 +208,22 @@ export default function VicesLog({ val, onChange }) {
           {t('vices.no')}
         </button>
       </div>
+
+      <div className="section-label">{t('vices.nf')}</div>
+      <div className="toggle-group">
+        <button
+          className={`toggle-btn ${val.nf === true ? 'active' : ''}`}
+          onClick={() => onChange({ ...val, nf: val.nf === true ? null : true })}
+        >
+          {t('vices.yes')}
+        </button>
+        <button
+          className={`toggle-btn danger ${val.nf === false ? 'active' : ''}`}
+          onClick={() => onChange({ ...val, nf: val.nf === false ? null : false })}
+        >
+          {t('vices.no')}
+        </button>
+      </div>
     </div>
   )
 }

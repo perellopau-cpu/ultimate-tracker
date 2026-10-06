@@ -20,11 +20,11 @@ export const calcHoursSlept = (bedtime, waketime) => {
 }
 
 export const emptyDay = () => ({
-  sleep:     { bedtime: '', waketime: '', phone30: null, wakeUpSpeed: null, legsUp: null, breathwork: null, nasalStrip: null, dentalFloss: null, gratitude: null },
+  sleep:     { bedtime: '', waketime: '', phone30: null, wakeUpSpeed: null, legsUp: null, breathwork: null, dentalFloss: null },
   nutrition: { weight: '', kcal: '', o3: false, zmb6: false, creatine: false, fruitveg1: false, fruitveg2: false },
-  exercise:  { type: '', km: '', pace: '', saunaRounds: '', cold: null },
+  exercise:  { type: '', km: '', pace: '', saunaRounds: '', cold: null, meditation: null },
   formation: { study: '', reading: '' },
-  vices:     { smokeType: null, cigaretteCount: '', cigarettes: '', alcoholCount: '', alcoholType: '', socialMediaUnder30: null },
+  vices:     { smokeType: null, cigaretteCount: '', cigarettes: '', alcoholCount: '', alcoholType: '', socialMediaUnder30: null, nf: null },
 })
 
 export const completionOf = (block, data) => {
@@ -39,10 +39,8 @@ export const completionOf = (block, data) => {
              + (d.wakeUpSpeed != null ? 1 : 0)
              + (d.legsUp !== null && d.legsUp !== undefined ? 1 : 0)
              + (d.breathwork !== null && d.breathwork !== undefined ? 1 : 0)
-             + (d.nasalStrip !== null && d.nasalStrip !== undefined ? 1 : 0)
-             + (d.dentalFloss !== null && d.dentalFloss !== undefined ? 1 : 0)
-             + (d.gratitude !== null && d.gratitude !== undefined ? 1 : 0),
-        total: 9,
+             + (d.dentalFloss !== null && d.dentalFloss !== undefined ? 1 : 0),
+        total: 7,
       }
     }
     case 'nutrition': {
@@ -56,8 +54,8 @@ export const completionOf = (block, data) => {
     case 'exercise': {
       const d = data.exercise
       return {
-        done: (d.type ? 1 : 0) + (d.saunaRounds ? 1 : 0) + (d.cold !== null && d.cold !== undefined ? 1 : 0),
-        total: 3,
+        done: (d.type ? 1 : 0) + (d.saunaRounds ? 1 : 0) + (d.cold !== null && d.cold !== undefined ? 1 : 0) + (d.meditation !== null && d.meditation !== undefined ? 1 : 0),
+        total: 4,
       }
     }
     case 'formation': {
@@ -72,8 +70,8 @@ export const completionOf = (block, data) => {
       // backward-compat: old data has d.cigarettes, new has d.smokeType
       const smokedFilled = (d.smokeType != null) || (d.cigarettes != null && d.cigarettes !== '')
       return {
-        done: (smokedFilled ? 1 : 0) + (d.alcoholCount !== '' && d.alcoholCount != null ? 1 : 0) + (d.socialMediaUnder30 !== null ? 1 : 0),
-        total: 3,
+        done: (smokedFilled ? 1 : 0) + (d.alcoholCount !== '' && d.alcoholCount != null ? 1 : 0) + (d.socialMediaUnder30 !== null ? 1 : 0) + (d.nf !== null && d.nf !== undefined ? 1 : 0),
+        total: 4,
       }
     }
     default: return { done: 0, total: 0 }

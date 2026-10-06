@@ -89,6 +89,19 @@ export default function ExerciseLog({ val, onChange }) {
           onClick={() => onChange({ ...val, cold: val.cold === false ? null : false })}
         >{t('sleep.no')}</button>
       </div>
+
+      <div className="section-label">{t('exercise.meditation')}</div>
+      <div className="toggle-group">
+        {['0', '5', '10'].map(n => (
+          <button
+            key={n}
+            className={`toggle-btn ${val.meditation === n ? 'active' : ''}`}
+            onClick={() => onChange({ ...val, meditation: val.meditation === n ? null : n })}
+          >
+            {n} min
+          </button>
+        ))}
+      </div>
     </div>
   )
 }

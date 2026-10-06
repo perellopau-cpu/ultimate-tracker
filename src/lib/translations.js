@@ -104,6 +104,7 @@ const t = {
     'exercise.rounds': 'Rounds',
     'exercise.time': 'Time (min)',
     'exercise.cold': 'Cold shower / bath',
+    'exercise.meditation': 'Meditation',
 
     // Formation
     'formation.timeInvested': 'Time invested',
@@ -122,6 +123,7 @@ const t = {
     'vices.drinks': 'Drinks',
     'vices.type': 'Type',
     'vices.socialMedia': 'Social media under 30 min today?',
+    'vices.nf': 'NF',
     'vices.yes': 'Yes',
     'vices.no': 'No',
 
@@ -255,6 +257,7 @@ const t = {
     'exercise.rounds': 'Rondas',
     'exercise.time': 'Tiempo (min)',
     'exercise.cold': 'Ducha / baño frío',
+    'exercise.meditation': 'Meditación',
 
     // Formation
     'formation.timeInvested': 'Tiempo invertido',
@@ -273,6 +276,7 @@ const t = {
     'vices.drinks': 'Bebidas',
     'vices.type': 'Tipo',
     'vices.socialMedia': '¿Redes sociales menos de 30 min hoy?',
+    'vices.nf': 'NF',
     'vices.yes': 'Sí',
     'vices.no': 'No',
 

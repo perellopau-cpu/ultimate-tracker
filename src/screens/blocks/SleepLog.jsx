@@ -125,18 +125,6 @@ export default function SleepLog({ val, onChange }) {
         >{t('sleep.no')}</button>
       </div>
 
-      <div className="section-label">{t('sleep.nasalStrip')}</div>
-      <div className="toggle-group">
-        <button
-          className={`toggle-btn ${val.nasalStrip === true ? 'active' : ''}`}
-          onClick={() => onChange({ ...val, nasalStrip: val.nasalStrip === true ? null : true })}
-        >{t('sleep.yes')}</button>
-        <button
-          className={`toggle-btn danger ${val.nasalStrip === false ? 'active' : ''}`}
-          onClick={() => onChange({ ...val, nasalStrip: val.nasalStrip === false ? null : false })}
-        >{t('sleep.no')}</button>
-      </div>
-
       <div className="section-label">{t('sleep.dentalFloss')}</div>
       <div className="toggle-group">
         <button
@@ -149,17 +137,6 @@ export default function SleepLog({ val, onChange }) {
         >{t('sleep.no')}</button>
       </div>
 
-      <div className="section-label">{t('formation.gratitude')}</div>
-      <div className="toggle-group">
-        <button
-          className={`toggle-btn ${val.gratitude === true ? 'active' : ''}`}
-          onClick={() => onChange({ ...val, gratitude: val.gratitude === true ? null : true })}
-        >{t('sleep.yes')}</button>
-        <button
-          className={`toggle-btn danger ${val.gratitude === false ? 'active' : ''}`}
-          onClick={() => onChange({ ...val, gratitude: val.gratitude === false ? null : false })}
-        >{t('sleep.no')}</button>
-      </div>
     </div>
   )
 }
