@@ -21,7 +21,7 @@ export const calcHoursSlept = (bedtime, waketime) => {
 
 export const emptyDay = () => ({
   sleep:     { bedtime: '', waketime: '', phone30: null, wakeUpSpeed: null, legsUp: null, breathwork: null, dentalFloss: null },
-  nutrition: { weight: '', kcal: '', o3: false, zmb6: false, creatine: false, fruitveg1: false, fruitveg2: false },
+  nutrition: { weight: '', kcal: '', o3: false, zmb6: false, creatine: false, dercutane: false, fruitveg1: false, fruitveg2: false },
   exercise:  { type: '', km: '', pace: '', saunaRounds: '', cold: null, meditation: null },
   formation: { study: '', reading: '' },
   vices:     { smokeType: null, cigaretteCount: '', cigarettes: '', alcoholCount: '', alcoholType: '', socialMediaUnder30: null, nf: null },

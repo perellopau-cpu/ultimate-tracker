@@ -7,6 +7,7 @@ export default function NutritionLog({ val, onChange, lastWeight }) {
     { key: 'o3',        labelKey: 'nutrition.o3' },
     { key: 'zmb6',      labelKey: 'nutrition.zmb6' },
     { key: 'creatine',  labelKey: 'nutrition.creatine' },
+    { key: 'dercutane', labelKey: 'nutrition.dercutane' },
     { key: 'fruitveg1', labelKey: 'nutrition.fruitveg1' },
     { key: 'fruitveg2', labelKey: 'nutrition.fruitveg2' },
   ]

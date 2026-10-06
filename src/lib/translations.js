@@ -85,6 +85,7 @@ const t = {
     'nutrition.o3': 'Omega 3',
     'nutrition.zmb6': 'ZMB6',
     'nutrition.creatine': 'Creatine',
+    'nutrition.dercutane': 'Dercutane',
     'nutrition.fruitveg1': '1st Fruit & Veg',
     'nutrition.fruitveg2': '2nd Fruit & Veg',
 
@@ -238,6 +239,7 @@ const t = {
     'nutrition.o3': 'Omega 3',
     'nutrition.zmb6': 'ZMB6',
     'nutrition.creatine': 'Creatina',
+    'nutrition.dercutane': 'Dercutane',
     'nutrition.fruitveg1': '1ª Fruta y Verdura',
     'nutrition.fruitveg2': '2ª Fruta y Verdura',
 
