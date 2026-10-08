@@ -59,6 +59,18 @@ export default function ExerciseLog({ val, onChange }) {
         </>
       )}
 
+      <div className="section-label">{t('exercise.pushups')}</div>
+      <div className="toggle-group">
+        <button
+          className={`toggle-btn ${val.pushups === true ? 'active' : ''}`}
+          onClick={() => onChange({ ...val, pushups: val.pushups === true ? null : true })}
+        >{t('sleep.yes')}</button>
+        <button
+          className={`toggle-btn danger ${val.pushups === false ? 'active' : ''}`}
+          onClick={() => onChange({ ...val, pushups: val.pushups === false ? null : false })}
+        >{t('sleep.no')}</button>
+      </div>
+
       <div className="section-label">{t('exercise.sauna')}</div>
       <div className="toggle-group">
         {['1', '2', '3'].map(n => (

@@ -104,6 +104,7 @@ const t = {
     'exercise.sauna': 'Sauna',
     'exercise.rounds': 'Rounds',
     'exercise.time': 'Time (min)',
+    'exercise.pushups': '50 Push-ups',
     'exercise.cold': 'Cold shower / bath',
     'exercise.meditation': 'Meditation',
 
@@ -258,6 +259,7 @@ const t = {
     'exercise.sauna': 'Sauna',
     'exercise.rounds': 'Rondas',
     'exercise.time': 'Tiempo (min)',
+    'exercise.pushups': '50 Flexiones',
     'exercise.cold': 'Ducha / baño frío',
     'exercise.meditation': 'Meditación',
 

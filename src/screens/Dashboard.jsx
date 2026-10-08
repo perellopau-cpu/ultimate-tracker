@@ -697,6 +697,16 @@ export default function Dashboard({ allData, session }) {
         }} />
 
         <div style={{ marginTop: 10, fontFamily: "'DM Mono', monospace", fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>
+          💪 50 Push-ups
+        </div>
+        <StreakDots days={days} getValue={key => {
+          const v = get(key).exercise.pushups
+          if (v === true)  return 'yes'
+          if (v === false) return 'no'
+          return ''
+        }} />
+
+        <div style={{ marginTop: 10, fontFamily: "'DM Mono', monospace", fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>
           🧘 Meditation
         </div>
         <StreakDots days={days} getValue={key => {
