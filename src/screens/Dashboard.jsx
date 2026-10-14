@@ -697,7 +697,7 @@ export default function Dashboard({ allData, session }) {
         }} />
 
         <div style={{ marginTop: 10, fontFamily: "'DM Mono', monospace", fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>
-          💪 50 Push-ups
+          💪 Push-ups / Crunches
         </div>
         <StreakDots days={days} getValue={key => {
           const v = get(key).exercise.pushups
@@ -778,7 +778,7 @@ export default function Dashboard({ allData, session }) {
         </ResponsiveContainer>
 
         <div style={{ marginTop: 12, fontFamily: "'DM Mono', monospace", fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>
-          Social media &lt;30 min
+          Screen time &lt;2h
         </div>
         <StreakDots days={days} getValue={socialStreak} />
 

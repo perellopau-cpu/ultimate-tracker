@@ -104,7 +104,7 @@ export default function ExerciseLog({ val, onChange }) {
 
       <div className="section-label">{t('exercise.meditation')}</div>
       <div className="toggle-group">
-        {['0', '5', '10'].map(n => (
+        {['0', '5', '10', '15', '20'].map(n => (
           <button
             key={n}
             className={`toggle-btn ${val.meditation === n ? 'active' : ''}`}
