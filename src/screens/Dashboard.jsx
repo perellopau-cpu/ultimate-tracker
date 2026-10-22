@@ -454,11 +454,18 @@ export default function Dashboard({ allData, session }) {
 
   const suppStreak = (key) => {
     const nu = get(key).nutrition
-    if (nu.o3 && nu.zmb6 && nu.creatine) return 'yes'
-    if (!nu.o3 && !nu.zmb6 && !nu.creatine) return ''
+    if (nu.zmb6 && nu.creatine) return 'yes'
+    if (!nu.zmb6 && !nu.creatine) return ''
     return 'no'
   }
   const suppDays = days.filter(({ key }) => suppStreak(key) === 'yes').length
+  const dercutaneStreak = (key) => {
+    const v = get(key).nutrition.dercutane
+    if (v === true) return 'yes'
+    if (v === false) return 'no'
+    return ''
+  }
+  const dercutaneDays = days.filter(({ key }) => dercutaneStreak(key) === 'yes').length
 
   const fruitvegStreak = (key) => {
     const nu = get(key).nutrition
@@ -578,16 +585,6 @@ export default function Dashboard({ allData, session }) {
         }} />
 
         <div style={{ marginTop: 10, fontFamily: "'DM Mono', monospace", fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>
-          🦵 10 min legs up
-        </div>
-        <StreakDots days={days} getValue={key => {
-          const v = get(key).sleep.legsUp
-          if (v === true)  return 'yes'
-          if (v === false) return 'no'
-          return ''
-        }} />
-
-        <div style={{ marginTop: 10, fontFamily: "'DM Mono', monospace", fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>
           🫁 4-7-8 Breathwork
         </div>
         <StreakDots days={days} getValue={key => {
@@ -624,9 +621,14 @@ export default function Dashboard({ allData, session }) {
         </ResponsiveContainer>
 
         <div style={{ marginTop: 12, fontFamily: "'DM Mono', monospace", fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>
-          Supplements (O3 + ZMB6 + Creatine) — {suppDays}/{days.length} days
+          Supplements (ZMB6 + Creatine) — {suppDays}/{days.length} days
         </div>
         <StreakDots days={days} getValue={suppStreak} />
+
+        <div style={{ marginTop: 10, fontFamily: "'DM Mono', monospace", fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>
+          Dercutane — {dercutaneDays}/{days.length} days
+        </div>
+        <StreakDots days={days} getValue={dercutaneStreak} />
 
         <div style={{ marginTop: 10, fontFamily: "'DM Mono', monospace", fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>
           Fruit &amp; Veg (2 pieces) — {fruitvegDays}/{days.length} days
@@ -673,20 +675,6 @@ export default function Dashboard({ allData, session }) {
           </BarChart>
         </ResponsiveContainer>
         <div style={{ marginTop: 12, fontFamily: "'DM Mono', monospace", fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>
-          🧖 Sauna
-        </div>
-        <StreakDots
-          days={days}
-          noColor="#f5c842"
-          getValue={key => {
-            const r = get(key).exercise.saunaRounds
-            if (r === '1' || r === '2' || r === '3') return 'yes'
-            if (r === 'no') return 'no'
-            return ''
-          }}
-        />
-
-        <div style={{ marginTop: 10, fontFamily: "'DM Mono', monospace", fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>
           🧊 Cold shower / bath
         </div>
         <StreakDots days={days} getValue={key => {
@@ -697,22 +685,11 @@ export default function Dashboard({ allData, session }) {
         }} />
 
         <div style={{ marginTop: 10, fontFamily: "'DM Mono', monospace", fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>
-          💪 Push-ups / Crunches
-        </div>
-        <StreakDots days={days} getValue={key => {
-          const v = get(key).exercise.pushups
-          if (v === true)  return 'yes'
-          if (v === false) return 'no'
-          return ''
-        }} />
-
-        <div style={{ marginTop: 10, fontFamily: "'DM Mono', monospace", fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>
           🧘 Meditation
         </div>
         <StreakDots days={days} getValue={key => {
           const v = get(key).exercise.meditation
-          if (v === '10') return 'yes'
-          if (v === '5')  return 'yes'
+          if (v === '5' || v === '10' || v === '15' || v === '20') return 'yes'
           if (v === '0')  return 'no'
           return ''
         }} />

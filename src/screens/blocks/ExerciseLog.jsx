@@ -59,37 +59,6 @@ export default function ExerciseLog({ val, onChange }) {
         </>
       )}
 
-      <div className="section-label">{t('exercise.pushups')}</div>
-      <div className="toggle-group">
-        <button
-          className={`toggle-btn ${val.pushups === true ? 'active' : ''}`}
-          onClick={() => onChange({ ...val, pushups: val.pushups === true ? null : true })}
-        >{t('sleep.yes')}</button>
-        <button
-          className={`toggle-btn danger ${val.pushups === false ? 'active' : ''}`}
-          onClick={() => onChange({ ...val, pushups: val.pushups === false ? null : false })}
-        >{t('sleep.no')}</button>
-      </div>
-
-      <div className="section-label">{t('exercise.sauna')}</div>
-      <div className="toggle-group">
-        {['1', '2', '3'].map(n => (
-          <button
-            key={n}
-            className={`toggle-btn ${val.saunaRounds === n ? 'active' : ''}`}
-            onClick={() => onChange({ ...val, saunaRounds: val.saunaRounds === n ? '' : n })}
-          >
-            {n} 🧖
-          </button>
-        ))}
-        <button
-          className={`toggle-btn ${val.saunaRounds === 'no' ? 'active' : ''}`}
-          onClick={() => onChange({ ...val, saunaRounds: val.saunaRounds === 'no' ? '' : 'no' })}
-        >
-          No sauna
-        </button>
-      </div>
-
       <div className="section-label">{t('exercise.cold')}</div>
       <div className="toggle-group">
         <button
@@ -107,7 +76,7 @@ export default function ExerciseLog({ val, onChange }) {
         {['0', '5', '10', '15', '20'].map(n => (
           <button
             key={n}
-            className={`toggle-btn ${val.meditation === n ? 'active' : ''}`}
+            className={`toggle-btn ${n === '0' ? 'danger' : ''} ${val.meditation === n ? 'active' : ''}`}
             onClick={() => onChange({ ...val, meditation: val.meditation === n ? null : n })}
           >
             {n} min

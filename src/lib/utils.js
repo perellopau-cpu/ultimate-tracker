@@ -20,9 +20,9 @@ export const calcHoursSlept = (bedtime, waketime) => {
 }
 
 export const emptyDay = () => ({
-  sleep:     { bedtime: '', waketime: '', phone30: null, wakeUpSpeed: null, legsUp: null, breathwork: null, dentalFloss: null },
-  nutrition: { weight: '', kcal: '', o3: false, zmb6: false, creatine: false, dercutane: false, fruitveg1: false, fruitveg2: false },
-  exercise:  { type: '', km: '', pace: '', saunaRounds: '', cold: null, meditation: null, pushups: null },
+  sleep:     { bedtime: '', waketime: '', phone30: null, wakeUpSpeed: null, breathwork: null, dentalFloss: null },
+  nutrition: { weight: '', zmb6: false, creatine: false, dercutane: false, fruitveg1: false, fruitveg2: false },
+  exercise:  { type: '', km: '', pace: '', cold: null, meditation: null },
   formation: { study: '', reading: '' },
   vices:     { smokeType: null, cigaretteCount: '', cigarettes: '', alcoholCount: '', alcoholType: '', socialMediaUnder30: null, nf: null },
 })
@@ -37,15 +37,14 @@ export const completionOf = (block, data) => {
              + (d.waketime ? 1 : 0)
              + (d.phone30 !== null ? 1 : 0)
              + (d.wakeUpSpeed != null ? 1 : 0)
-             + (d.legsUp !== null && d.legsUp !== undefined ? 1 : 0)
              + (d.breathwork !== null && d.breathwork !== undefined ? 1 : 0)
              + (d.dentalFloss !== null && d.dentalFloss !== undefined ? 1 : 0),
-        total: 7,
+        total: 6,
       }
     }
     case 'nutrition': {
       const d = data.nutrition
-      const ticks = [d.o3, d.zmb6, d.creatine, d.fruitveg1, d.fruitveg2].filter(Boolean).length
+      const ticks = [d.zmb6, d.creatine, d.dercutane, d.fruitveg1, d.fruitveg2].filter(Boolean).length
       return {
         done: (d.weight ? 1 : 0) + (ticks > 0 ? 1 : 0),
         total: 2,
@@ -54,8 +53,8 @@ export const completionOf = (block, data) => {
     case 'exercise': {
       const d = data.exercise
       return {
-        done: (d.type ? 1 : 0) + (d.saunaRounds ? 1 : 0) + (d.cold !== null && d.cold !== undefined ? 1 : 0) + (d.meditation !== null && d.meditation !== undefined ? 1 : 0) + (d.pushups !== null && d.pushups !== undefined ? 1 : 0),
-        total: 5,
+        done: (d.type ? 1 : 0) + (d.cold !== null && d.cold !== undefined ? 1 : 0) + (d.meditation !== null && d.meditation !== undefined ? 1 : 0),
+        total: 3,
       }
     }
     case 'formation': {

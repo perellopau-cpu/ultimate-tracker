@@ -4,7 +4,6 @@ export default function NutritionLog({ val, onChange, lastWeight }) {
   const { t } = useT()
 
   const ticks = [
-    { key: 'o3',        labelKey: 'nutrition.o3' },
     { key: 'zmb6',      labelKey: 'nutrition.zmb6' },
     { key: 'creatine',  labelKey: 'nutrition.creatine' },
     { key: 'dercutane', labelKey: 'nutrition.dercutane' },

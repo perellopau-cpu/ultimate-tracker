@@ -75,13 +75,12 @@ export default function Challenges({ session }) {
 
   // ── Toggle ───────────────────────────────────────────────────────────
   const toggle = async (id) => {
-    let newDone
+    const item = items.find(c => c.id === id)
+    if (!item) return
+    const newDone = !item.done
+
     setItems(prev => {
-      const next = prev.map(c => {
-        if (c.id !== id) return c
-        newDone = !c.done
-        return { ...c, done: newDone }
-      })
+      const next = prev.map(c => c.id === id ? { ...c, done: newDone } : c)
       saveCache(userId, year, next)
       return next
     })
